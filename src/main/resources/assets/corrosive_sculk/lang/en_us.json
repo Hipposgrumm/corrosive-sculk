@@ -1,0 +1,19 @@
+{
+  "death.attack.sculk_damage": "%1$s was consumed by Sculk",
+  "death.attack.sculk_damage.player": "%1$s was consumed by Sculk whilst trying to escape %2$s",
+  "subtitles.player.heart_sculk": "Heart Fades",
+  "subtitles.player.heart_sculk_return": "Heart Returns",
+  "effect.corrosive_sculk.sculk_resistance": "Sculk Resistance",
+  "item.minecraft.potion.effect.sculk_resistance": "Potion of Sculk Resistance",
+  "item.minecraft.potion.effect.strong_sculk_resistance": "Potion of Sculk Resistance",
+  "item.minecraft.potion.effect.stronger_sculk_resistance": "Potion of Sculk Resistance",
+  "item.minecraft.splash_potion.effect.sculk_resistance": "Splash Potion of Sculk Resistance",
+  "item.minecraft.splash_potion.effect.strong_sculk_resistance": "Splash Potion of Sculk Resistance",
+  "item.minecraft.splash_potion.effect.stronger_sculk_resistance": "Splash Potion of Sculk Resistance",
+  "item.minecraft.lingering_potion.effect.sculk_resistance": "Lingering Potion of Sculk Resistance",
+  "item.minecraft.lingering_potion.effect.strong_sculk_resistance": "Lingering Potion of Sculk Resistance",
+  "item.minecraft.lingering_potion.effect.stronger_sculk_resistance": "Lingering Potion of Sculk Resistance",
+  "item.minecraft.tipped_arrow.effect.sculk_resistance": "Arrow of Sculk Resistance",
+  "item.minecraft.tipped_arrow.effect.strong_sculk_resistance": "Arrow of Sculk Resistance",
+  "item.minecraft.tipped_arrow.effect.stronger_sculk_resistance": "Arrow of Sculk Resistance"
+}

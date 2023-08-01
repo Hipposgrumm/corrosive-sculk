@@ -1,0 +1,14 @@
+{
+  "player.heart_sculk": {
+    "subtitle": "subtitles.player.heart_sculk",
+    "sounds": [
+      "corrosive_sculk:heart_sculk"
+    ]
+  },
+  "player.heart_sculk_return": {
+    "subtitle": "subtitles.player.heart_sculk_return",
+    "sounds": [
+      "corrosive_sculk:heart_sculk_return"
+    ]
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "package": "gg.hipposgrumm.corrosive_sculk.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "refmap": "mixins.corrosive_sculk.refmap.json",
+  "mixins": [
+    "PreventEntityHealingSculkHeartsMixin",
+    "PreventEntityHealingSculkHeartsMixin$AccountForSculkedHeartsWhenHurtMixin"
+  ],
+  "client": [
+    "HeartRenderMixin",
+    "HeartRenderMixin$HeartAddingMixin"
+  ],
+  "minVersion": "0.8"
+}
