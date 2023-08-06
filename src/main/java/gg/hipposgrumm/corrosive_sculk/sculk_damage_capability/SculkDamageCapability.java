@@ -1,5 +1,8 @@
 package gg.hipposgrumm.corrosive_sculk.sculk_damage_capability;
 
+import gg.hipposgrumm.corrosive_sculk.CorrosiveSculk;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.common.capabilities.Capability;
@@ -8,6 +11,7 @@ import net.minecraftforge.common.capabilities.CapabilityToken;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 
 public class SculkDamageCapability {
     private int damage;
@@ -122,6 +126,12 @@ public class SculkDamageCapability {
 
         public static boolean getWarning() {
             return sculkWarning;
+        }
+
+        public static void playHeartSound(boolean isHeal) {
+            if (FMLEnvironment.dist.isClient()) {
+                Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forAmbientAddition(isHeal? CorrosiveSculk.HEART_SCULK_RETURN.get():CorrosiveSculk.HEART_SCULK.get()));
+            }
         }
     }
 }
