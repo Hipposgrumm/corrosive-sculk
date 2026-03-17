@@ -1,0 +1,17 @@
+{
+  "required": true,
+  "package": "dev.hipposgrumm.${modid}.mixin",
+  "compatibilityLevel": "${mixin_java_version}",
+  "refmap": "${modid}.mixins.refmap.json",
+  "mixins": [
+    "MixinLivingEntity",
+    "MixinPlayer"
+  ],
+  "client": [
+    "MixinGui",
+    //? if forge
+    "MixinForgeGui"
+  ],
+  "minVersion": "0.8",
+  "mixinextras": {"minVersion": "0.5.0"}
+}

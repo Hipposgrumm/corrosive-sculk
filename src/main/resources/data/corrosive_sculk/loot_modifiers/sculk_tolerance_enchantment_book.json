@@ -1,0 +1,11 @@
+{
+  "type": "corrosive_sculk:sculk_tolerance_enchantment",
+  "conditions": [
+    {
+      "condition": "forge:loot_table_id",
+      "loot_table_id": "minecraft:chests/ancient_city"
+    }
+  ],
+  "item": "minecraft:enchanted_book",
+  "chance": 40.0
+}

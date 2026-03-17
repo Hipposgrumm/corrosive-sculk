@@ -1,13 +1,48 @@
 pluginManagement {
     repositories {
-        gradlePluginPortal()
         maven {
-            name = 'MinecraftForge'
-            url = 'https://maven.minecraftforge.net/'
+            name = 'Fabric'
+            url = 'https://maven.fabricmc.net/'
         }
+        maven {
+            name = 'Forge'
+            url = 'https://maven.minecraftforge.net'
+        }
+        maven {
+            name = 'NeoForge'
+            url = 'https://maven.neoforged.net/releases/'
+        }
+        maven {
+            name = 'Stonecutter'
+            url = 'https://maven.kikugie.dev/releases'
+        }
+        maven {
+            name = 'Architectury'
+            url = 'https://maven.architectury.dev'
+        }
+        gradlePluginPortal()
     }
 }
 
 plugins {
-    id 'org.gradle.toolchains.foojay-resolver-convention' version '0.5.0'
+    id "dev.kikugie.stonecutter" version "0.4.+"
+}
+
+stonecutter {
+    shared {
+        // 1.20.1
+        vers("1.20.1-fabric",   "1.20.1")
+        vers("1.20.1-forge",    "1.20.1") // 1.20.1 Forge-Neoforge Compatible)
+        // 1.20.6
+        vers("1.20.6-fabric",   "1.20.6")
+        vers("1.20.6-neoforge", "1.20.6") // >=1.20.2 Neoforge
+        // 1.21.1
+        vers("1.21.1-fabric",   "1.21.1")
+        vers("1.21.1-neoforge", "1.21.1")
+        // 1.21.8
+        vers("1.21.8-fabric",   "1.21.8")
+        vers("1.21.8-neoforge", "1.21.8")
+    }
+
+    create rootProject
 }

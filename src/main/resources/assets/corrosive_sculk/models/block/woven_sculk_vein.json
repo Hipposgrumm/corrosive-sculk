@@ -1,0 +1,4 @@
+{
+  "parent": "minecraft:block/sculk_vein",
+  "render_type": "minecraft:cutout"
+}

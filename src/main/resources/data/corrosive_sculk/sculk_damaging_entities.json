@@ -1,0 +1,4 @@
+{
+  "_comment": "This is the maximum amount of sculk damage an entity can do. (Absent means no damage.)",
+  "minecraft:warden": 5
+}

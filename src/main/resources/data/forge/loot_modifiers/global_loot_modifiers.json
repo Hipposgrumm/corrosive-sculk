@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "entries": [
+    "corrosive_sculk:sculk_tolerance_enchantment_book",
+    "corrosive_sculk:sculk_tolerance_enchantment_diamchest",
+    "corrosive_sculk:sculk_tolerance_enchantment_ironchest",
+    "corrosive_sculk:sculk_tolerance_enchantment_diamhorse"
+  ]
+}

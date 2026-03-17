@@ -10,5 +10,11 @@
     "sounds": [
       "corrosive_sculk:heart_sculk_return"
     ]
+  },
+  "player.heart_sculk_warn": {
+    "subtitle": "subtitles.player.heart_sculk_warn",
+    "sounds": [
+      "corrosive_sculk:heart_sculk_warn"
+    ]
   }
 }

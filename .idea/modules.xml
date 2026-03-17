@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/CorrosiveSculk.iml" filepath="$PROJECT_DIR$/.idea/modules/CorrosiveSculk.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/versions/1.20.1-fabric/CorrosiveSculk.1.20.1-fabric.main.iml" filepath="$PROJECT_DIR$/.idea/modules/versions/1.20.1-fabric/CorrosiveSculk.1.20.1-fabric.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/versions/1.20.1-fabric/CorrosiveSculk.1.20.1-fabric.test.iml" filepath="$PROJECT_DIR$/.idea/modules/versions/1.20.1-fabric/CorrosiveSculk.1.20.1-fabric.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/versions/1.20.1-forge/CorrosiveSculk.1.20.1-forge.main.iml" filepath="$PROJECT_DIR$/.idea/modules/versions/1.20.1-forge/CorrosiveSculk.1.20.1-forge.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/versions/1.20.1-forge/CorrosiveSculk.1.20.1-forge.test.iml" filepath="$PROJECT_DIR$/.idea/modules/versions/1.20.1-forge/CorrosiveSculk.1.20.1-forge.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/versions/1.20.6-fabric/CorrosiveSculk.1.20.6-fabric.main.iml" filepath="$PROJECT_DIR$/.idea/modules/versions/1.20.6-fabric/CorrosiveSculk.1.20.6-fabric.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/versions/1.20.6-fabric/CorrosiveSculk.1.20.6-fabric.test.iml" filepath="$PROJECT_DIR$/.idea/modules/versions/1.20.6-fabric/CorrosiveSculk.1.20.6-fabric.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/versions/1.20.6-neoforge/CorrosiveSculk.1.20.6-neoforge.main.iml" filepath="$PROJECT_DIR$/.idea/modules/versions/1.20.6-neoforge/CorrosiveSculk.1.20.6-neoforge.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/versions/1.20.6-neoforge/CorrosiveSculk.1.20.6-neoforge.test.iml" filepath="$PROJECT_DIR$/.idea/modules/versions/1.20.6-neoforge/CorrosiveSculk.1.20.6-neoforge.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/versions/1.21.1-fabric/CorrosiveSculk.1.21.1-fabric.main.iml" filepath="$PROJECT_DIR$/.idea/modules/versions/1.21.1-fabric/CorrosiveSculk.1.21.1-fabric.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/versions/1.21.1-fabric/CorrosiveSculk.1.21.1-fabric.test.iml" filepath="$PROJECT_DIR$/.idea/modules/versions/1.21.1-fabric/CorrosiveSculk.1.21.1-fabric.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/versions/1.21.1-neoforge/CorrosiveSculk.1.21.1-neoforge.main.iml" filepath="$PROJECT_DIR$/.idea/modules/versions/1.21.1-neoforge/CorrosiveSculk.1.21.1-neoforge.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/versions/1.21.1-neoforge/CorrosiveSculk.1.21.1-neoforge.test.iml" filepath="$PROJECT_DIR$/.idea/modules/versions/1.21.1-neoforge/CorrosiveSculk.1.21.1-neoforge.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/versions/1.21.8-fabric/CorrosiveSculk.1.21.8-fabric.main.iml" filepath="$PROJECT_DIR$/.idea/modules/versions/1.21.8-fabric/CorrosiveSculk.1.21.8-fabric.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/versions/1.21.8-fabric/CorrosiveSculk.1.21.8-fabric.test.iml" filepath="$PROJECT_DIR$/.idea/modules/versions/1.21.8-fabric/CorrosiveSculk.1.21.8-fabric.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/versions/1.21.8-neoforge/CorrosiveSculk.1.21.8-neoforge.main.iml" filepath="$PROJECT_DIR$/.idea/modules/versions/1.21.8-neoforge/CorrosiveSculk.1.21.8-neoforge.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/versions/1.21.8-neoforge/CorrosiveSculk.1.21.8-neoforge.test.iml" filepath="$PROJECT_DIR$/.idea/modules/versions/1.21.8-neoforge/CorrosiveSculk.1.21.8-neoforge.test.iml" />
+    </modules>
+  </component>
+</project>
