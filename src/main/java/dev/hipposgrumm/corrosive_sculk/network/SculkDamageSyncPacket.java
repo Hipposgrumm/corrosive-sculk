@@ -1,8 +1,11 @@
 package dev.hipposgrumm.corrosive_sculk.network;
 
+import dev.hipposgrumm.corrosive_sculk.CorrosiveSculk;
 import dev.hipposgrumm.corrosive_sculk.capability.SculkDamageCapability;
+import dev.hipposgrumm.corrosive_sculk.config.Config;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
@@ -20,8 +23,18 @@ public class SculkDamageSyncPacket implements CorrosiveSculkPacket {
         this.entity = entity.getId();
         this.type = Type.DAMAGE;
         this.damage = data.getDamage();
-        this.protection = data.getProtection();
-        this.maxProtection = data.getMaxProtection();
+        if (Config.sculkResistInvul) {
+            if (entity instanceof LivingEntity en && en.hasEffect(CorrosiveSculk.SCULK_RESISTANCE.get())) {
+                this.protection = 10; // good enough(TM)
+                this.maxProtection = 10;
+            } else {
+                this.protection = 0;
+                this.maxProtection = 0;
+            }
+        } else {
+            this.protection = data.getProtection();
+            this.maxProtection = data.getMaxProtection();
+        }
         this.sculkWarningPercent = data.getWarning();
     }
 

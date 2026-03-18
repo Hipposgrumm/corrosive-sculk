@@ -2,6 +2,7 @@ package dev.hipposgrumm.corrosive_sculk.util;
 
 import dev.hipposgrumm.corrosive_sculk.CorrosiveSculk;
 import dev.hipposgrumm.corrosive_sculk.capability.SculkDamageCapability;
+import dev.hipposgrumm.corrosive_sculk.config.Config;
 import dev.hipposgrumm.corrosive_sculk.network.SculkDamageSoundPacket;
 import dev.hipposgrumm.corrosive_sculk.network.SculkDamageSyncPacket;
 import net.minecraft.core.BlockPos;
@@ -116,7 +117,12 @@ public class SculkDamaging {
     /// @return true if should update, false if not
     public static boolean handleHealing(SculkDamageCapability sculkDamage, LivingEntity entity, LevelAccessor level) {
         boolean forceHeal = sculkDamage.forceHeal() || entity.level().getDifficulty() == Difficulty.PEACEFUL;
-        boolean healNormal = (forceHeal || level.getBrightness(LightLayer.SKY, entity.blockPosition()) > 4) && (sculkDamage.getDamage() > 0);
+        boolean healNormal = (
+                    forceHeal || (
+                            (Config.sculkResistHeals && entity.hasEffect(CorrosiveSculk.SCULK_RESISTANCE.get())) ||
+                            level.getBrightness(LightLayer.SKY, entity.blockPosition()) > 4
+                    )
+                ) && (sculkDamage.getDamage() > 0);
         boolean healResist = sculkDamage.getProtection() < sculkDamage.getMaxProtection();
         boolean healAtAll = (healNormal || healResist) && (forceHeal || !entity.hasEffect(MobEffects.DARKNESS));
         if (healAtAll) {
@@ -176,8 +182,12 @@ public class SculkDamaging {
 
     public static boolean canSculkDamage(LivingEntity entity) {             // Entities can't take sculk damage if:
         if (entity.isInvulnerable()) return false;                          // The entity is invulnerable.
-        if (entity instanceof ServerPlayer player && (player.isCreative()   // Player is in creative.
-                 || player.isSpectator())) return false;                    // Player is in spectator.
+        if (entity instanceof ServerPlayer player &&
+                ((player.isCreative() || player.isSpectator())))            // Player is in creative mode or spectator.
+            return false;
+        if (Config.sculkResistInvul)
+            if (entity.hasEffect(CorrosiveSculk.SCULK_RESISTANCE.get()))    // The entity has sculk resistance and assist mode is enabled.
+                return false;
         return entity.level().getDifficulty() != Difficulty.PEACEFUL &&     // The difficulty is set to peaceful.
                 !entity.getType().is(CorrosiveSculk.SCULK_IMMUNE_ENTITIES); // The entity has natural immunity to sculk.
     }

@@ -2,6 +2,8 @@ package dev.hipposgrumm.corrosive_sculk;
 
 import com.mojang.serialization.Codec;
 import dev.hipposgrumm.corrosive_sculk.block.MultifaceDoNothingBlock;
+import dev.hipposgrumm.corrosive_sculk.config.Config;
+import dev.hipposgrumm.corrosive_sculk.config.ConfigScreen;
 import dev.hipposgrumm.corrosive_sculk.enchantment.SculkToleranceEnchantment;
 import dev.hipposgrumm.corrosive_sculk.loot.LootModifierAddSculkToleranceItem;
 import dev.hipposgrumm.corrosive_sculk.network.SculkDamageSyncPacket;
@@ -32,6 +34,8 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentCategory;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraftforge.client.ConfigScreenHandler;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.common.loot.IGlobalLootModifier;
@@ -44,14 +48,19 @@ import net.minecraftforge.event.entity.living.LivingUseTotemEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.LogicalSide;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.function.Consumer;
 
 @Mod(CorrosiveSculk.MODID)
 public class CorrosiveSculk {
@@ -66,8 +75,8 @@ public class CorrosiveSculk {
     public static final DeferredRegister<SoundEvent> SOUND_EVENTS = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, MODID);
     public static final DeferredRegister<Codec<? extends IGlobalLootModifier>> LOOT_MODIFIERS = DeferredRegister.create(ForgeRegistries.Keys.GLOBAL_LOOT_MODIFIER_SERIALIZERS, MODID);
 
-    public static final RegistryObject<Block> WOVEN_SCULK = BLOCKS.register("woven_sculk", () -> new Block(Block.Properties.copy(Blocks.SCULK)));
-    public static final RegistryObject<Block> WOVEN_SCULK_VEIN = BLOCKS.register("woven_sculk_vein", () -> new MultifaceDoNothingBlock(Block.Properties.copy(Blocks.SCULK_VEIN)));
+    public static final RegistryObject<Block> WOVEN_SCULK = BLOCKS.register("woven_sculk", () -> new Block(Block.Properties.copy(Blocks.SCULK).sound(SoundType.WOOL)));
+    public static final RegistryObject<Block> WOVEN_SCULK_VEIN = BLOCKS.register("woven_sculk_vein", () -> new MultifaceDoNothingBlock(Block.Properties.copy(Blocks.SCULK_VEIN).sound(SoundType.WOOL)));
     public static final RegistryObject<Item> WOVEN_SCULK_ITEM = ITEMS.register("woven_sculk", () -> new BlockItem(WOVEN_SCULK.get(), new Item.Properties()));
     public static final RegistryObject<Item> WOVEN_SCULK_VEIN_ITEM = ITEMS.register("woven_sculk_vein", () -> new BlockItem(WOVEN_SCULK_VEIN.get(), new Item.Properties()));
 
@@ -91,6 +100,8 @@ public class CorrosiveSculk {
     private static SculkDamagingEntitiesManager SCULK_DAMAGING_ENTITIES;
 
     public CorrosiveSculk(FMLJavaModLoadingContext context) {
+        Config.registerConfig();
+
         IEventBus bus = context.getModEventBus();
 
         BLOCKS.register(bus);
@@ -101,6 +112,13 @@ public class CorrosiveSculk {
         SOUND_EVENTS.register(bus);
         LOOT_MODIFIERS.register(bus);
 
+        if (FMLEnvironment.dist.isClient()) {
+            bus.addListener((Consumer<FMLClientSetupEvent>)
+                    (event ->
+                            CorrosiveSculk.clientSetup(event, context)
+                    )
+            );
+        }
         bus.addListener(CorrosiveSculk::commonSetup);
         bus.addListener(CorrosiveSculk::addCreativeItems);
         MinecraftForge.EVENT_BUS.addListener(CorrosiveSculk::registerReloadListeners);
@@ -115,11 +133,19 @@ public class CorrosiveSculk {
         MinecraftForge.EVENT_BUS.addListener(CorrosiveSculk::stopTrackingEntity);
     }
 
+    private static void clientSetup(FMLClientSetupEvent event, FMLJavaModLoadingContext context) {
+        if (ModList.get().isLoaded("cloth_config")) event.enqueueWork(() -> {
+            context.registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class, () -> new ConfigScreenHandler.ConfigScreenFactory((mc, parent) -> ConfigScreen.create(parent)));
+        });
+    }
+
     private static void commonSetup(FMLCommonSetupEvent event) {
         event.enqueueWork(() -> {
             BrewHelper.createRecipes(Potions.AWKWARD, new ItemStack(Items.SCULK_CATALYST), SCULK_RESISTANCE_POTION.get());
-            BrewHelper.createRecipes(SCULK_RESISTANCE_POTION.get(), new ItemStack(Items.GLOWSTONE_DUST), STRONG_SCULK_RESISTANCE_POTION.get());
-            BrewHelper.createRecipes(STRONG_SCULK_RESISTANCE_POTION.get(), new ItemStack(Items.GLOWSTONE_DUST), STRONGER_SCULK_RESISTANCE_POTION.get());
+            if (!Config.sculkResistInvul) {
+                BrewHelper.createRecipes(SCULK_RESISTANCE_POTION.get(), new ItemStack(Items.GLOWSTONE_DUST), STRONG_SCULK_RESISTANCE_POTION.get());
+                BrewHelper.createRecipes(STRONG_SCULK_RESISTANCE_POTION.get(), new ItemStack(Items.GLOWSTONE_DUST), STRONGER_SCULK_RESISTANCE_POTION.get());
+            }
         });
 
         NetworkHelper.init();

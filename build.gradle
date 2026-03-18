@@ -71,6 +71,9 @@ repositories {
             includeGroup "curse.maven"
         }
     }
+
+    maven { url "https://maven.shedaniel.me/" }
+    maven { url "https://maven.terraformersmc.com/releases/" }
 }
 
 dependencies {
@@ -81,16 +84,30 @@ dependencies {
         modImplementation "net.fabricmc:fabric-loader:${project.fabric_version}"
         // Fabric API. This is technically optional, but you probably want it anyway.
         modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}+${project.minecraft_version}"
+
+        modImplementation("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_version}") {
+            exclude(group: "net.fabricmc.fabric-api")
+            exclude(group: "net.fabricmc", module: "fabric-loader")
+        }
+
+        modImplementation("com.terraformersmc:modmenu:${project.modmenu_version}") {
+            exclude(group: "net.fabricmc.fabric-api")
+            exclude(group: "net.fabricmc", module: "fabric-loader")
+        }
     } else if (platform == "forge") {
         forge "net.minecraftforge:forge:${project.minecraft_version}-${project.forge_version}"
         compileOnly annotationProcessor("io.github.llamalad7:mixinextras-common:0.5.0")
         implementation include("io.github.llamalad7:mixinextras-forge:0.5.0")
 
         if (stonecutter.eval(mc_version, "=1.20.1")) {
-            modImplementation "curse.maven:mantle-74924:7563777"
+            modCompileOnly "curse.maven:mantle-74924:7563777"
         }
+
+        modApi "me.shedaniel.cloth:cloth-config-forge:${project.cloth_version}"
     } else if (platform == "neoforge") {
         neoForge "net.neoforged:neoforge:${project.neoforge_version}"
+
+        modApi "me.shedaniel.cloth:cloth-config-neoforge:${project.cloth_version}"
     }
 	
 	if (platform.contains("forge")) {
@@ -128,7 +145,9 @@ processResources {
             mod_description: project.mod_description,
             author: project.author,
             license: project.license,
-            minecraft_dep: project.minecraft_dep
+            minecraft_dep: project.minecraft_dep,
+            cloth_version: project.cloth_version,
+            modmenu_version: project.modmenu_version
     ]
 
     filesMatching("fabric.mod.json") { expand replacements }

@@ -23,3 +23,10 @@ mandatory=true
 versionRange="${minecraft_dep}"
 ordering="NONE"
 side="BOTH"
+
+[[dependencies.${modid}]]
+modId="cloth_config"
+mandatory=false
+versionRange="[${cloth_version},)"
+ordering="BEFORE"
+side="CLIENT"

@@ -29,3 +29,10 @@ type="required"
 versionRange="${minecraft_dep}"
 ordering="NONE"
 side="BOTH"
+
+[[dependencies.${modid}]]
+modId="cloth_config"
+type="optional"
+versionRange="[${cloth_version},)"
+ordering="BEFORE"
+side="CLIENT"

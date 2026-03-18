@@ -14,8 +14,8 @@
             <option value="$PROJECT_DIR$/versions/1.20.6-neoforge" />
             <option value="$PROJECT_DIR$/versions/1.21.1-fabric" />
             <option value="$PROJECT_DIR$/versions/1.21.1-neoforge" />
-            <option value="$PROJECT_DIR$/versions/1.21.8-fabric" />
-            <option value="$PROJECT_DIR$/versions/1.21.8-neoforge" />
+            <option value="$PROJECT_DIR$/versions/1.21.4-fabric" />
+            <option value="$PROJECT_DIR$/versions/1.21.4-neoforge" />
           </set>
         </option>
         <option name="resolveExternalAnnotations" value="true" />
