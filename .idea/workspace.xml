@@ -4,105 +4,21 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2be73d0b-9854-4044-864d-05d670e3f6eb" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/discord.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules/CorrosiveSculk.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/dev/hipposgrumm/corrosive_sculk/block/MultifaceDoNothingBlock.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/dev/hipposgrumm/corrosive_sculk/enchantment/SculkToleranceEnchantment.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/dev/hipposgrumm/corrosive_sculk/loot/LootModifierAddSculkToleranceItem.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/dev/hipposgrumm/corrosive_sculk/loot/LootModifiers.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/dev/hipposgrumm/corrosive_sculk/mixin/MixinForgeGui.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/dev/hipposgrumm/corrosive_sculk/mixin/MixinPlayer.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/dev/hipposgrumm/corrosive_sculk/network/CorrosiveSculkPacket.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/dev/hipposgrumm/corrosive_sculk/util/HelperMethodsForMixins.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/dev/hipposgrumm/corrosive_sculk/util/NetworkHelper.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/dev/hipposgrumm/corrosive_sculk/util/SculkDamaging.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/dev/hipposgrumm/corrosive_sculk/util/SculkDamagingEntitiesManager.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/META-INF/accesstransformer.cfg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/META-INF/neoforge.mods.toml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/assets/corrosive_sculk/blockstates/woven_sculk.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/assets/corrosive_sculk/blockstates/woven_sculk_vein.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/assets/corrosive_sculk/models/block/woven_sculk_vein.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/assets/corrosive_sculk/models/item/woven_sculk.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/assets/corrosive_sculk/models/item/woven_sculk_vein.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/assets/corrosive_sculk/textures/gui/sculk_hearts.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/assets/corrosive_sculk/textures/gui/sprites/sculkheart.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/assets/corrosive_sculk/textures/gui/sprites/sculkheart_empty.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/assets/corrosive_sculk/textures/gui/sprites/sculkheart_empty_hardcore.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/assets/corrosive_sculk/textures/gui/sprites/sculkheart_empty_horse.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/assets/corrosive_sculk/textures/gui/sprites/sculkheart_half.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/assets/corrosive_sculk/textures/gui/sprites/sculkheart_half_hardcore.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/assets/corrosive_sculk/textures/gui/sprites/sculkheart_half_horse.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/assets/corrosive_sculk/textures/gui/sprites/sculkheart_hardcore.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/assets/corrosive_sculk/textures/gui/sprites/sculkheart_horse.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/assets/corrosive_sculk/textures/gui/sprites/sculkresist.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/assets/corrosive_sculk/textures/gui/sprites/sculkresist_empty.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/assets/corrosive_sculk/textures/gui/sprites/sculkresist_empty_hardcore.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/assets/corrosive_sculk/textures/gui/sprites/sculkresist_empty_horse.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/assets/corrosive_sculk/textures/gui/sprites/sculkresist_half.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/assets/corrosive_sculk/textures/gui/sprites/sculkresist_half_hardcore.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/assets/corrosive_sculk/textures/gui/sprites/sculkresist_half_horse.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/assets/corrosive_sculk/textures/gui/sprites/sculkresist_hardcore.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/assets/corrosive_sculk/textures/gui/sprites/sculkresist_horse.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/corrosive_sculk.accesswidener" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/corrosive_sculk.mixins.json5" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/data/corrosive_sculk/loot_modifiers/sculk_tolerance_enchantment_book.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/data/corrosive_sculk/loot_modifiers/sculk_tolerance_enchantment_diamchest.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/data/corrosive_sculk/loot_modifiers/sculk_tolerance_enchantment_diamhorse.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/data/corrosive_sculk/loot_modifiers/sculk_tolerance_enchantment_ironchest.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/data/corrosive_sculk/loot_tables/blocks/woven_sculk.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/data/corrosive_sculk/loot_tables/blocks/woven_sculk_vein.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/data/corrosive_sculk/recipes/woven_sculk.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/data/corrosive_sculk/recipes/woven_sculk_flipped.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/data/corrosive_sculk/sculk_damaging_entities.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/data/corrosive_sculk/tags/blocks/sculk_blocks.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/data/corrosive_sculk/tags/entity_types/sculk_immune.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/data/forge/loot_modifiers/global_loot_modifiers.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/data/minecraft/tags/damage_type/bypasses_effects.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/data/minecraft/tags/damage_type/bypasses_wolf_armor.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/fabric.mod.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/stonecutter.gradle" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/versions/1.20.1-fabric/gradle.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/versions/1.20.1-forge/gradle.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/versions/1.20.6-fabric/gradle.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/versions/1.20.6-neoforge/gradle.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/versions/1.21.1-fabric/gradle.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/versions/1.21.1-neoforge/gradle.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/versions/1.21.8-fabric/gradle.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/versions/1.21.8-neoforge/gradle.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitattributes" beforeDir="false" afterPath="$PROJECT_DIR$/.gitattributes" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CREDITS.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/LICENSE.txt" beforeDir="false" afterPath="$PROJECT_DIR$/LICENSE.txt" afterDir="false" />
+    <list default="true" id="2be73d0b-9854-4044-864d-05d670e3f6eb" name="Changes" comment="Creating dev branch so that everyone can see what I'm doing.&#10;I have changed so many things I have lost track.">
+      <change afterPath="$PROJECT_DIR$/src/main/java/dev/hipposgrumm/corrosive_sculk/mixin/MixinDisableMantleHeartsRender.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/changelog.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gradle.properties" beforeDir="false" afterPath="$PROJECT_DIR$/gradle.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.jar" beforeDir="false" afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gradlew" beforeDir="false" afterPath="$PROJECT_DIR$/gradlew" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gradlew.bat" beforeDir="false" afterPath="$PROJECT_DIR$/gradlew.bat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/settings.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/settings.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/gg/hipposgrumm/corrosive_sculk/CorrosiveSculk.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/hipposgrumm/corrosive_sculk/CorrosiveSculk.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/gg/hipposgrumm/corrosive_sculk/config/Config.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/gg/hipposgrumm/corrosive_sculk/effects/SculkResistanceEffect.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/gg/hipposgrumm/corrosive_sculk/mixin/HeartRenderMixin.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/hipposgrumm/corrosive_sculk/mixin/MixinGui.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/gg/hipposgrumm/corrosive_sculk/mixin/PreventEntityHealingSculkHeartsMixin.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/hipposgrumm/corrosive_sculk/mixin/MixinLivingEntity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/gg/hipposgrumm/corrosive_sculk/mixin_helpers/HeartType.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/gg/hipposgrumm/corrosive_sculk/network/SculkDamageOccurPacket.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/hipposgrumm/corrosive_sculk/network/SculkDamageSoundPacket.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/gg/hipposgrumm/corrosive_sculk/network/SculkDamageSyncPacket.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/hipposgrumm/corrosive_sculk/network/SculkDamageSyncPacket.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/gg/hipposgrumm/corrosive_sculk/sculk_damage_capability/SculkDamageCapability.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/hipposgrumm/corrosive_sculk/capability/SculkDamageCapability.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/gg/hipposgrumm/corrosive_sculk/util/BrewHelper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/hipposgrumm/corrosive_sculk/util/BrewHelper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/META-INF/mods.toml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/META-INF/mods.toml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/corrosive_sculk/lang/en_us.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/corrosive_sculk/lang/en_us.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/corrosive_sculk/sounds.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/corrosive_sculk/sounds.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/corrosive_sculk/textures/gui/hearts.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/mixins.corrosive_sculk.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/pack.mcmeta" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/pack.mcmeta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/corrosive_sculk/textures/gui/sculk_hearts.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/corrosive_sculk/textures/gui/sculk_hearts.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/corrosive_sculk/textures/gui/sprites/sculkheart.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/corrosive_sculk/textures/gui/sprites/sculkheart.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/corrosive_sculk/textures/gui/sprites/sculkheart_empty.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/corrosive_sculk/textures/gui/sprites/sculkheart_empty.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/corrosive_sculk/textures/gui/sprites/sculkheart_empty_hardcore.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/corrosive_sculk/textures/gui/sprites/sculkheart_empty_hardcore.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/corrosive_sculk/textures/gui/sprites/sculkheart_empty_horse.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/corrosive_sculk/textures/gui/sprites/sculkheart_empty_horse.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/corrosive_sculk/textures/gui/sprites/sculkheart_half.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/corrosive_sculk/textures/gui/sprites/sculkheart_half.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/corrosive_sculk/textures/gui/sprites/sculkheart_half_hardcore.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/corrosive_sculk/textures/gui/sprites/sculkheart_half_hardcore.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/corrosive_sculk/textures/gui/sprites/sculkheart_half_horse.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/corrosive_sculk/textures/gui/sprites/sculkheart_half_horse.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/corrosive_sculk/textures/gui/sprites/sculkheart_hardcore.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/corrosive_sculk/textures/gui/sprites/sculkheart_hardcore.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/corrosive_sculk/textures/gui/sprites/sculkheart_horse.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/corrosive_sculk/textures/gui/sprites/sculkheart_horse.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/corrosive_sculk.mixins.json5" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/corrosive_sculk.mixins.json5" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -145,6 +61,11 @@
     </option>
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="master" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
@@ -176,28 +97,28 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_ADD_EXTERNAL_FILES": "true",
-    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "Gradle.Build CorrosiveSculk.executor": "Run",
-    "Gradle.CorrosiveSculk [clean].executor": "Run",
-    "Gradle.CorrosiveSculk [genSources].executor": "Run",
-    "Gradle.CorrosiveSculk:versions:1.20.1-forge [runClient].executor": "Debug",
-    "Gradle.Download Sources.executor": "Run",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "master",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "G:/My Drive/Minecraft Mods/CorrosiveSculk/src/main/resources/data/corrosive_sculk/loot_modifiers",
-    "project.structure.last.edited": "Project",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.2",
-    "run.code.analysis.last.selected.profile": "pProject Default",
-    "settings.editor.selected.configurable": "Debugger_Data_Views_Java"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
+    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;Gradle.Build CorrosiveSculk.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.CorrosiveSculk [clean].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.CorrosiveSculk [genSources].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.CorrosiveSculk:versions:1.20.1-forge [runClient].executor&quot;: &quot;Debug&quot;,
+    &quot;Gradle.Download Sources.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;dev&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;G:/My Drive/Minecraft Mods/CorrosiveSculk/src/main/resources/data/corrosive_sculk/loot_modifiers&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;Debugger_Data_Views_Java&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="G:\My Drive\Minecraft Mods\CorrosiveSculk\src\main\resources\data\corrosive_sculk\loot_modifiers" />
@@ -318,7 +239,20 @@
       <option name="presentableId" value="Default" />
       <updated>1747790180418</updated>
     </task>
+    <task id="LOCAL-00001" summary="Creating dev branch so that everyone can see what I'm doing.&#10;I have changed so many things I have lost track.">
+      <option name="closed" value="true" />
+      <created>1773780576885</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1773780576885</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Creating dev branch so that everyone can see what I'm doing.&#10;I have changed so many things I have lost track." />
+    <option name="LAST_COMMIT_MESSAGE" value="Creating dev branch so that everyone can see what I'm doing.&#10;I have changed so many things I have lost track." />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

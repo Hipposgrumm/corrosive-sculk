@@ -8,6 +8,7 @@
     "MixinPlayer"
   ],
   "client": [
+    "MixinDisableMantleHeartsRender",
     "MixinGui",
     //? if forge
     "MixinForgeGui"

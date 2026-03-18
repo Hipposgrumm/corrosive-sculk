@@ -1,0 +1,28 @@
+package dev.hipposgrumm.corrosive_sculk.mixin;
+
+import dev.hipposgrumm.corrosive_sculk.capability.SculkDamageCapability;
+import net.minecraft.client.Minecraft;
+import net.minecraft.world.entity.Entity;
+import net.minecraftforge.client.event.RenderGuiOverlayEvent;
+import org.spongepowered.asm.mixin.Final;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import slimeknights.mantle.client.ExtraHeartRenderHandler;
+
+@Mixin(ExtraHeartRenderHandler.class)
+public class MixinDisableMantleHeartsRender {
+    @Shadow @Final private Minecraft mc;
+
+    @Inject(remap = false, method = "renderHealthbar", at = @At("HEAD"), cancellable = true)
+    private void corrosive_sculk$disableMantleHeartRenderer(RenderGuiOverlayEvent.Pre event, CallbackInfo ci) {
+        Entity entity = this.mc.getCameraEntity();
+        if (entity == null) return;
+        SculkDamageCapability.ClientData data = SculkDamageCapability.ENTITIES.getOrDefault(entity.getId(), SculkDamageCapability.ClientData.EMPTY);
+        if (data.getDamage() > 0 || data.getMaxProtection() > 0 || data.getWarning() < 100) {
+            ci.cancel();
+        }
+    }
+}

@@ -85,6 +85,10 @@ dependencies {
         forge "net.minecraftforge:forge:${project.minecraft_version}-${project.forge_version}"
         compileOnly annotationProcessor("io.github.llamalad7:mixinextras-common:0.5.0")
         implementation include("io.github.llamalad7:mixinextras-forge:0.5.0")
+
+        if (stonecutter.eval(mc_version, "=1.20.1")) {
+            modImplementation "curse.maven:mantle-74924:7563777"
+        }
     } else if (platform == "neoforge") {
         neoForge "net.neoforged:neoforge:${project.neoforge_version}"
     }
