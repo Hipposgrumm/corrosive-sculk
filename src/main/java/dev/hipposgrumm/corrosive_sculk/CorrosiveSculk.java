@@ -33,7 +33,6 @@ import net.minecraft.world.item.enchantment.EnchantmentCategory;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.common.loot.IGlobalLootModifier;
 import net.minecraftforge.event.AddReloadListenerEvent;
@@ -73,9 +72,9 @@ public class CorrosiveSculk {
     public static final RegistryObject<Item> WOVEN_SCULK_VEIN_ITEM = ITEMS.register("woven_sculk_vein", () -> new BlockItem(WOVEN_SCULK_VEIN.get(), new Item.Properties()));
 
     public static final RegistryObject<MobEffect> SCULK_RESISTANCE = POTION_EFFECTS.register("sculk_resistance", () -> new MobEffect(MobEffectCategory.BENEFICIAL, 0x063E44) {});
-    public static final RegistryObject<Potion> SCULK_RESISTANCE_POTION = POTIONS.register("sculk_resistance", () -> new Potion(new MobEffectInstance(SCULK_RESISTANCE.get(), 3600)));
-    public static final RegistryObject<Potion> STRONG_SCULK_RESISTANCE_POTION = POTIONS.register("strong_sculk_resistance", () -> new Potion(new MobEffectInstance(SCULK_RESISTANCE.get(), 3600, 1)));
-    public static final RegistryObject<Potion> STRONGER_SCULK_RESISTANCE_POTION = POTIONS.register("stronger_sculk_resistance", () -> new Potion(new MobEffectInstance(SCULK_RESISTANCE.get(), 3600, 2)));
+    public static final RegistryObject<Potion> SCULK_RESISTANCE_POTION = POTIONS.register("sculk_resistance", () -> new Potion(new MobEffectInstance(SCULK_RESISTANCE.get(), 9600)));
+    public static final RegistryObject<Potion> STRONG_SCULK_RESISTANCE_POTION = POTIONS.register("strong_sculk_resistance", () -> new Potion(new MobEffectInstance(SCULK_RESISTANCE.get(), 9600, 1)));
+    public static final RegistryObject<Potion> STRONGER_SCULK_RESISTANCE_POTION = POTIONS.register("stronger_sculk_resistance", () -> new Potion(new MobEffectInstance(SCULK_RESISTANCE.get(), 9600, 2)));
     public static final RegistryObject<Enchantment> ENCHANTMENT_SCULK_TOLERANCE = ENCHANTMENTS.register("sculk_tolerance", () -> new SculkToleranceEnchantment(Enchantment.Rarity.UNCOMMON, EnchantmentCategory.ARMOR));
 
     public static final RegistryObject<SoundEvent> HEART_SCULK = SOUND_EVENTS.register("player.heart_sculk", () -> SoundEvent.createFixedRangeEvent(ResourceLocation.fromNamespaceAndPath(MODID, "player.heart_sculk"), 2.0F));
@@ -118,9 +117,9 @@ public class CorrosiveSculk {
 
     private static void commonSetup(FMLCommonSetupEvent event) {
         event.enqueueWork(() -> {
-            BrewingRecipeRegistry.addRecipe(new BrewHelper(Potions.AWKWARD, new ItemStack(Items.SCULK), SCULK_RESISTANCE_POTION.get()));
-            BrewingRecipeRegistry.addRecipe(new BrewHelper(SCULK_RESISTANCE_POTION.get(), new ItemStack(Items.GLOWSTONE_DUST), STRONG_SCULK_RESISTANCE_POTION.get()));
-            BrewingRecipeRegistry.addRecipe(new BrewHelper(STRONG_SCULK_RESISTANCE_POTION.get(), new ItemStack(Items.GLOWSTONE_DUST), STRONGER_SCULK_RESISTANCE_POTION.get()));
+            BrewHelper.createRecipes(Potions.AWKWARD, new ItemStack(Items.SCULK_CATALYST), SCULK_RESISTANCE_POTION.get());
+            BrewHelper.createRecipes(SCULK_RESISTANCE_POTION.get(), new ItemStack(Items.GLOWSTONE_DUST), STRONG_SCULK_RESISTANCE_POTION.get());
+            BrewHelper.createRecipes(STRONG_SCULK_RESISTANCE_POTION.get(), new ItemStack(Items.GLOWSTONE_DUST), STRONGER_SCULK_RESISTANCE_POTION.get());
         });
 
         NetworkHelper.init();

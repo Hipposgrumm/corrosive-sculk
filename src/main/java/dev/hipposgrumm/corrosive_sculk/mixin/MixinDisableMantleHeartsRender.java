@@ -14,7 +14,7 @@ import slimeknights.mantle.client.ExtraHeartRenderHandler;
 
 @Mixin(ExtraHeartRenderHandler.class)
 public class MixinDisableMantleHeartsRender {
-    @Shadow @Final private Minecraft mc;
+    @Shadow(remap = false) @Final private Minecraft mc;
 
     @Inject(remap = false, method = "renderHealthbar", at = @At("HEAD"), cancellable = true)
     private void corrosive_sculk$disableMantleHeartRenderer(RenderGuiOverlayEvent.Pre event, CallbackInfo ci) {
