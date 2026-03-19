@@ -7,7 +7,6 @@ import dev.hipposgrumm.corrosive_sculk.network.SculkDamageSoundPacket;
 import dev.hipposgrumm.corrosive_sculk.network.SculkDamageSyncPacket;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Difficulty;
@@ -71,9 +70,12 @@ public class SculkDamaging {
     }
 
     /// @return true if updating all, false if only updating warning
-    public static boolean handleSculkPresence(SculkDamageCapability sculkDamage, LivingEntity entity, ServerLevel level, boolean noContactDamaging) {
+    public static boolean handleSculkPresence(SculkDamageCapability sculkDamage, LivingEntity entity, boolean hasContact, boolean cantBeSafe) {
         ServerPlayer player = asPlayer(entity);
-        if (player != null) sculkDamage.setLastContact(level.getGameTime());
+        if (player != null) {
+            if (cantBeSafe) sculkDamage.decrementContactCounter();
+            if (hasContact) sculkDamage.setLastContactCounter(30);
+        }
         if (!sculkDamage.forceHeal() && entity.level().getDifficulty() != Difficulty.PEACEFUL)
             sculkDamage.setHealTimer(null);
         if (sculkDamage.getDamageTimer() == null) {
@@ -83,7 +85,7 @@ public class SculkDamaging {
                 NetworkHelper.send(player, new SculkDamageSoundPacket(SculkDamageSoundPacket.Type.WARN));
             return true;
         } else if (sculkDamage.getDamageTimer() <= 0) {
-            if (!noContactDamaging) {
+            if (hasContact) {
                 doSculkDamage(1, sculkDamage, entity, null);
                 sculkDamage.setDamageTimer(getDamageTime(entity)/2);
                 sculkDamage.setWarning(100);
@@ -97,20 +99,17 @@ public class SculkDamaging {
         }
     }
 
-    public static boolean handleSafeAndShouldHeal(SculkDamageCapability sculkDamage, LivingEntity entity, ServerLevel level, boolean damaged) {
+    public static boolean handleSafeAndShouldHeal(SculkDamageCapability sculkDamage, LivingEntity entity, boolean hasContact, boolean cantBeSafe) {
         ServerPlayer player = asPlayer(entity);
         boolean forceHeal = sculkDamage.forceHeal() || entity.level().getDifficulty() == Difficulty.PEACEFUL;
         boolean safe;
         if (forceHeal) { // Always safe in peaceful.
             safe = true;
         } else {
-            safe = !damaged && (entity.onGround() || (player != null && ((level.getGameTime() - sculkDamage.getLastContact()) > 30)));
+            safe = !hasContact && (player == null || !cantBeSafe || sculkDamage.getLastContactCounter() <= 0);
             if (safe) sculkDamage.setDamageTimer(null);
         }
-        if (safe) {
-            sculkDamage.setLastContact(-31);
-            sculkDamage.setWarning(100);
-        }
+        if (safe) sculkDamage.setWarning(100);
         return safe;
     }
 

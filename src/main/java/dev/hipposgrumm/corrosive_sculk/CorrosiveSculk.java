@@ -209,24 +209,26 @@ public class CorrosiveSculk {
                 if (!(e instanceof LivingEntity entity)) continue;
                 entity.getCapability(SculkDamageCapability.Provider.SCULK_DAMAGE).ifPresent(sculkDamage -> {
                     boolean updateFull = false, updateWarn = false;
-                    boolean damaged;
+                    boolean hasContact, cantBeSafe;
                     if (SculkDamaging.canSculkDamage(entity)) {
                         boolean isPlayer = entity instanceof ServerPlayer || entity.getControllingPassenger() instanceof ServerPlayer;
                         // Damaging
-                        boolean noContactDamaging = isPlayer && !entity.onGround() && sculkDamage.getDamageTimer() != null;
-                        damaged = noContactDamaging || (isPlayer ?
+                        cantBeSafe = isPlayer && !entity.onGround() && sculkDamage.getDamageTimer() != null;
+                        hasContact = isPlayer ?
                                 SculkDamaging.detectSculkCollisionPlayer(entity, level) : // For players do more complex stuff.
-                                SculkDamaging.detectSculkCollision(entity, level)         // For other entities simpler checks will do.
-                        );
-                        if (damaged) {
-                            boolean upd = SculkDamaging.handleSculkPresence(sculkDamage, entity, level, noContactDamaging);
+                                SculkDamaging.detectSculkCollision(entity, level);        // For other entities simpler checks will do.
+                        if (cantBeSafe || hasContact) {
+                            boolean upd = SculkDamaging.handleSculkPresence(sculkDamage, entity, hasContact, cantBeSafe);
                             if (upd) updateFull = true;
                             else updateWarn = true;
                         }
-                    } else damaged = false;
+                    } else {
+                        hasContact = false;
+                        cantBeSafe = false;
+                    }
 
                     // Healing
-                    if (SculkDamaging.handleSafeAndShouldHeal(sculkDamage, entity, level, damaged)) {
+                    if (SculkDamaging.handleSafeAndShouldHeal(sculkDamage, entity, hasContact, cantBeSafe)) {
                         boolean upd = SculkDamaging.handleHealing(sculkDamage, entity, level);
                         if (upd) updateFull = true;
                         else updateWarn = true;

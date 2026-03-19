@@ -4,14 +4,13 @@ import dev.hipposgrumm.corrosive_sculk.capability.SculkDamageCapability;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.Entity;
 import net.minecraftforge.client.event.RenderGuiOverlayEvent;
-import org.spongepowered.asm.mixin.Final;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import slimeknights.mantle.client.ExtraHeartRenderHandler;
 
+@Pseudo
 @Mixin(ExtraHeartRenderHandler.class)
 public class MixinDisableMantleHeartsRender {
     @Shadow(remap = false) @Final private Minecraft mc;

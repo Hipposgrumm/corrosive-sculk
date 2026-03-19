@@ -23,7 +23,7 @@ public class SculkDamageCapability {
     private int protection;
     private int maxProtection;
     private byte sculkWarningPercent;
-    private long lastContact;
+    private int lastContact;
     private Integer damageTimer;
     private int damageTimerMax = -1;
     private Integer healTimer;
@@ -45,7 +45,7 @@ public class SculkDamageCapability {
         return sculkWarningPercent;
     }
 
-    public long getLastContact() {
+    public long getLastContactCounter() {
         return lastContact;
     }
 
@@ -93,8 +93,12 @@ public class SculkDamageCapability {
         this.sculkWarningPercent = (byte)value;
     }
 
-    public void setLastContact(long time) {
+    public void setLastContactCounter(int time) {
         this.lastContact = time;
+    }
+
+    public void decrementContactCounter() {
+        if (lastContact > 0) this.lastContact--;
     }
 
     public void setDamageTimer(Integer time) {
@@ -141,7 +145,7 @@ public class SculkDamageCapability {
         protection = nbt.getInt("protection");
         maxProtection = nbt.getInt("maxProtection");
         sculkWarningPercent = nbt.getByte("sculkWarning");
-        lastContact = nbt.getLong("lastContact");
+        lastContact = nbt.getInt("lastContact");
         if (nbt.contains("damageTimer")) {
             damageTimer = nbt.getInt("damageTimer");
             damageTimerMax = nbt.getInt("damageTimerMax");
