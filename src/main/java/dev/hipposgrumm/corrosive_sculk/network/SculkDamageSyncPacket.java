@@ -4,11 +4,9 @@ import dev.hipposgrumm.corrosive_sculk.CorrosiveSculk;
 import dev.hipposgrumm.corrosive_sculk.capability.SculkDamageCapability;
 import dev.hipposgrumm.corrosive_sculk.config.Config;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraftforge.network.NetworkEvent;
-
-import java.util.function.Supplier;
 
 public class SculkDamageSyncPacket implements CorrosiveSculkPacket {
     private final int entity;
@@ -22,7 +20,13 @@ public class SculkDamageSyncPacket implements CorrosiveSculkPacket {
     private SculkDamageSyncPacket(Entity entity, SculkDamageCapability data) {
         this.entity = entity.getId();
         this.type = Type.DAMAGE;
-        this.damage = data.getDamage();
+        if (Config.sculkHealCircumstance.hasSculkDamage) {
+            this.damage = data.getDamage();
+            this.sculkWarningPercent = data.getWarning();
+        } else {
+            this.damage = 0;
+            this.sculkWarningPercent = 0;
+        }
         if (Config.sculkResistInvul) {
             if (entity instanceof LivingEntity en && en.hasEffect(CorrosiveSculk.SCULK_RESISTANCE.get())) {
                 this.protection = 10; // good enough(TM)
@@ -35,7 +39,6 @@ public class SculkDamageSyncPacket implements CorrosiveSculkPacket {
             this.protection = data.getProtection();
             this.maxProtection = data.getMaxProtection();
         }
-        this.sculkWarningPercent = data.getWarning();
     }
 
     private SculkDamageSyncPacket(Entity entity, byte warning) {
@@ -44,7 +47,11 @@ public class SculkDamageSyncPacket implements CorrosiveSculkPacket {
         this.damage = null;
         this.protection = null;
         this.maxProtection = null;
-        this.sculkWarningPercent = warning;
+        if (Config.sculkHealCircumstance.hasSculkDamage) {
+            this.sculkWarningPercent = warning;
+        } else {
+            this.sculkWarningPercent = 0;
+        }
     }
 
     private SculkDamageSyncPacket(Entity entity) {
@@ -55,6 +62,15 @@ public class SculkDamageSyncPacket implements CorrosiveSculkPacket {
         this.maxProtection = null;
         this.sculkWarningPercent = null;
     }
+
+    //? if fabric {
+    /*public static final ResourceLocation ID = new ResourceLocation(CorrosiveSculk.MODID, "sync_damage");
+
+    @Override
+    public ResourceLocation getID() {
+        return ID;
+    }
+    *///?}
 
     public static SculkDamageSyncPacket update(Entity entity, SculkDamageCapability data) {
         return new SculkDamageSyncPacket(entity, data);
@@ -83,6 +99,7 @@ public class SculkDamageSyncPacket implements CorrosiveSculkPacket {
         this.sculkWarningPercent = this.type != Type.REMOVE ? buf.readByte() : null;
     }
 
+    @Override
     public void toBytes(FriendlyByteBuf buf) {
         buf.writeInt(entity);
         buf.writeEnum(type);
@@ -96,21 +113,17 @@ public class SculkDamageSyncPacket implements CorrosiveSculkPacket {
         }
     }
 
-    public boolean handle(Supplier<NetworkEvent.Context> supplier) {
-        NetworkEvent.Context context = supplier.get();
-        context.enqueueWork(() -> {
-            if (type == Type.REMOVE) {
-                SculkDamageCapability.ENTITIES.remove(entity);
+    public void handleClient() {
+        if (type == Type.REMOVE) {
+            SculkDamageCapability.ENTITIES.remove(entity);
+        } else {
+            SculkDamageCapability.ClientData data = SculkDamageCapability.ENTITIES.computeIfAbsent(entity, i -> new SculkDamageCapability.ClientData());
+            if (type == Type.DAMAGE) {
+                data.set(damage, protection, maxProtection, sculkWarningPercent);
             } else {
-                SculkDamageCapability.ClientData data = SculkDamageCapability.ENTITIES.computeIfAbsent(entity, i -> new SculkDamageCapability.ClientData());
-                if (type == Type.DAMAGE) {
-                    data.set(damage, protection, maxProtection, sculkWarningPercent);
-                } else {
-                    data.setWarning(sculkWarningPercent);
-                }
+                data.setWarning(sculkWarningPercent);
             }
-        });
-        return true;
+        }
     }
 
     private enum Type {

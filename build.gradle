@@ -6,16 +6,19 @@ plugins {
 
 def platform = project.property("loom.platform")
 def mc_version = stonecutter.current.version
-def targetJavaVersion = 17
+def targetJavaVersion
 
 // Unnecessary code thing.
 if (stonecutter.eval(mc_version, ">=1.20.5")) { // Java 21 for 1.20.5+
     targetJavaVersion = 21
-} else if (stonecutter.eval(mc_version, "<1.18")) { // Java 17 for 1.18+
-    if (stonecutter.eval(mc_version, ">=1.17")) { // Java 16 for 1.17
-        targetJavaVersion = 16
-    } else targetJavaVersion = 8 // Java 8 for versions below.
+} else if (stonecutter.eval(mc_version, ">=1.18")) { // Java 17 for 1.18+
+    targetJavaVersion = 17
+} else if (stonecutter.eval(mc_version, ">=1.17")) { // Java 16 for 1.17
+    targetJavaVersion = 16
+} else { // Java 8 for versions below.
+    targetJavaVersion = 8
 }
+
 
 version = project.mod_version
 group = project.maven_group
@@ -51,6 +54,12 @@ stonecutter {
     stonecutter.const("fabric", platform == "fabric")
     stonecutter.const("forge", platform == "forge")
     stonecutter.const("neoforge", platform == "neoforge")
+    stonecutter.const("forgebase", platform.contains("forge"))
+    stonecutter.swap("resourcelocation",
+            // TODO: Keep updating this for each version's needs.
+            (platform == "fabric") ? "new ResourceLocation"
+            : "ResourceLocation.fromNamespaceAndPath"
+    )
 }
 
 repositories {
@@ -108,6 +117,11 @@ dependencies {
         neoForge "net.neoforged:neoforge:${project.neoforge_version}"
 
         modApi "me.shedaniel.cloth:cloth-config-neoforge:${project.cloth_version}"
+
+        if (stonecutter.eval(mc_version, "<1.21")) {
+            // Need @Expresssion Annotation
+            implementation(include("io.github.llamalad7:mixinextras-neoforge:0.5.0"))
+        }
     }
 	
 	if (platform.contains("forge")) {

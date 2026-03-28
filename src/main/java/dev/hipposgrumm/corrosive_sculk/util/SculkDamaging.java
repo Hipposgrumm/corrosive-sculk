@@ -17,6 +17,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.HorseArmorItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.block.state.BlockState;
@@ -81,20 +82,19 @@ public class SculkDamaging {
         if (sculkDamage.getDamageTimer() == null) {
             sculkDamage.setDamageTimer(getDamageTime(entity));
 
-            if (player != null)
-                NetworkHelper.send(player, new SculkDamageSoundPacket(SculkDamageSoundPacket.Type.WARN));
+            //if (player != null) NetworkHelper.send(player, new SculkDamageSoundPacket(SculkDamageSoundPacket.Type.WARN));
             return true;
         } else if (sculkDamage.getDamageTimer() <= 0) {
             if (hasContact) {
                 doSculkDamage(1, sculkDamage, entity, null);
                 sculkDamage.setDamageTimer(getDamageTime(entity)/2);
-                sculkDamage.setWarning(100);
+                sculkDamage.setWarning(0);
             }
             return true;
         } else {
             sculkDamage.decrementDamageTimer();
             if (sculkDamage.getDamageTimerMax() != 0)
-                sculkDamage.setWarning((int) ((sculkDamage.getDamageTimer() / (float) sculkDamage.getDamageTimerMax()) * 100));
+                sculkDamage.setWarning(100-(int) ((sculkDamage.getDamageTimer() / (float) sculkDamage.getDamageTimerMax()) * 100));
             return false;
         }
     }
@@ -109,7 +109,7 @@ public class SculkDamaging {
             safe = !hasContact && (player == null || !cantBeSafe || sculkDamage.getLastContactCounter() <= 0);
             if (safe) sculkDamage.setDamageTimer(null);
         }
-        if (safe) sculkDamage.setWarning(100);
+        if (safe) sculkDamage.setWarning(0);
         return safe;
     }
 
@@ -118,7 +118,7 @@ public class SculkDamaging {
         boolean forceHeal = sculkDamage.forceHeal() || entity.level().getDifficulty() == Difficulty.PEACEFUL;
         boolean healNormal = (
                     forceHeal || (
-                            (Config.sculkResistHeals && entity.hasEffect(CorrosiveSculk.SCULK_RESISTANCE.get())) ||
+                            !Config.sculkHealCircumstance.hasSculkDamage || (Config.sculkHealCircumstance.resistDoesHealing && entity.hasEffect(CorrosiveSculk.SCULK_RESISTANCE.get())) ||
                             level.getBrightness(LightLayer.SKY, entity.blockPosition()) > 4
                     )
                 ) && (sculkDamage.getDamage() > 0);
@@ -136,9 +136,11 @@ public class SculkDamaging {
                         sculkDamage.setForcedHealing(0);
                     }
 
-                    ServerPlayer player = asPlayer(entity);
-                    if (player != null)
-                        NetworkHelper.send(player, new SculkDamageSoundPacket(SculkDamageSoundPacket.Type.HEAL));
+                    if (Config.sculkHealCircumstance.hasSculkDamage) {
+                        ServerPlayer player = asPlayer(entity);
+                        if (player != null)
+                            NetworkHelper.send(player, new SculkDamageSoundPacket(SculkDamageSoundPacket.Type.HEAL));
+                    }
                 }
                 if (healResist) sculkDamage.setProtection(sculkDamage.getProtection() + 1);
                 sculkDamage.setHealTimer(10);
@@ -175,8 +177,10 @@ public class SculkDamaging {
     public static void sendUpdateWarn(SculkDamageCapability sculkDamage, LivingEntity entity) {
         ServerPlayer player = asPlayer(entity);
         if (player != null) NetworkHelper.send(player, SculkDamageSyncPacket.warning(entity, sculkDamage.getWarning()));
-        player = asPlayer(entity.getControllingPassenger());
-        if (player != null) NetworkHelper.send(player, SculkDamageSyncPacket.warning(entity, sculkDamage.getWarning()));
+        for (Entity pass:entity.getPassengers()) {
+            if (pass instanceof ServerPlayer pl)
+                NetworkHelper.send(pl, SculkDamageSyncPacket.warning(entity, sculkDamage.getWarning()));
+        }
     }
 
     public static boolean canSculkDamage(LivingEntity entity) {             // Entities can't take sculk damage if:
@@ -193,36 +197,43 @@ public class SculkDamaging {
 
     public static void doSculkDamage(int hearts, SculkDamageCapability sculkDamage, LivingEntity entity, Entity attacker) {
         DamageSource source = new DamageSource(entity.level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(CorrosiveSculk.SCULK_DAMAGE), null, attacker);
-        if (sculkDamage.getProtection() > 0) {
-            if (hearts > sculkDamage.getProtection()) {
-                hearts -= sculkDamage.getProtection();
-                sculkDamage.setProtection(0);
-            } else {
-                sculkDamage.damageProtection(hearts);
-                return;
+        if (Config.sculkHealCircumstance.hasSculkDamage) {
+            boolean canDamageStill = true;
+            if (sculkDamage.getProtection() > 0) {
+                if (hearts > sculkDamage.getProtection()) {
+                    hearts -= sculkDamage.getProtection();
+                    sculkDamage.setProtection(0);
+                } else {
+                    sculkDamage.damageProtection(hearts);
+                    canDamageStill = false;
+                }
             }
-        }
-        if (entity.getAbsorptionAmount() > 0) {
-            entity.hurt(source, entity.getAbsorptionAmount());
-            return;
-        }
+            if (canDamageStill && entity.getAbsorptionAmount() > 0) {
+                entity.hurt(source, entity.getAbsorptionAmount());
+                canDamageStill = false;
+            }
 
-        sculkDamage.increaseDamage(hearts);
-        float maxHealthAfterSculk = entity.getMaxHealth() - (sculkDamage.getDamage()*2);
-        if (entity.getHealth() > maxHealthAfterSculk) entity.hurt(source, entity.getHealth()-maxHealthAfterSculk);
+            if (canDamageStill) {
+                sculkDamage.increaseDamage(hearts);
+                float maxHealthAfterSculk = entity.getMaxHealth() - (sculkDamage.getDamage() * 2);
+                if (entity.getHealth() > maxHealthAfterSculk) entity.hurt(source, entity.getHealth() - maxHealthAfterSculk);
+            }
+        } else {
+            entity.hurt(source, hearts*2);
+        }
 
         if (entity instanceof ServerPlayer player)
             NetworkHelper.send(player, new SculkDamageSoundPacket(SculkDamageSoundPacket.Type.DAMAGE));
     }
 
     public static int getDamageTime(LivingEntity entity) {
-        int tolerance = 80;
+        int tolerance = 40;
         for (ItemStack armor:entity.getArmorSlots()) {
-            int level = armor.getEnchantmentLevel(CorrosiveSculk.ENCHANTMENT_SCULK_TOLERANCE.get());
+            int level = EnchantmentHelper.getItemEnchantmentLevel(CorrosiveSculk.ENCHANTMENT_SCULK_TOLERANCE.get(), armor);
             if (armor.getItem() instanceof HorseArmorItem) { // TODO: Dog armor
-                tolerance += level*20;
+                tolerance += level*10;
             } else {
-                tolerance += level*5;
+                tolerance += level*3;
             }
         }
         return tolerance;

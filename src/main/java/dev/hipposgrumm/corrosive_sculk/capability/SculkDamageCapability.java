@@ -1,17 +1,16 @@
 package dev.hipposgrumm.corrosive_sculk.capability;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.sounds.SimpleSoundInstance;
-import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.sounds.SoundEvent;
+
+//? if forgebase {
+import net.minecraft.core.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.CapabilityToken;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fml.loading.FMLEnvironment;
+//?}
 
 import java.util.HashMap;
 import java.util.Map;
@@ -154,6 +153,7 @@ public class SculkDamageCapability {
         forceHeal = nbt.getInt("forceHeal");
     }
 
+    //? if forgebase {
     public static class Provider implements ICapabilityProvider, INBTSerializable<CompoundTag> {
         public static Capability<SculkDamageCapability> SCULK_DAMAGE = CapabilityManager.get(new CapabilityToken<>(){});
 
@@ -183,6 +183,7 @@ public class SculkDamageCapability {
             createSculkDamageCapability().loadNBTData(nbt);
         }
     }
+    //?}
 
     public static class ClientData {
         public static final ClientData EMPTY = new ClientData();
@@ -217,12 +218,6 @@ public class SculkDamageCapability {
 
         public byte getWarning() {
             return sculkWarningPercent;
-        }
-
-        public static void playHeartSound(SoundEvent sound) {
-            if (FMLEnvironment.dist.isClient()) {
-                Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forAmbientAddition(sound));
-            }
         }
     }
 }

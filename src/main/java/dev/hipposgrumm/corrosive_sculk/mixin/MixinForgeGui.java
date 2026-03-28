@@ -1,6 +1,6 @@
 package dev.hipposgrumm.corrosive_sculk.mixin;
 
-//? if forge {
+//? if forgebase {
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
@@ -108,7 +108,7 @@ public class MixinForgeGui {
         // Draw the warning, which will always be last.
         WarnHeartData warn = warnedHeartRef.get();
         SculkDamageCapability.ClientData clientData = clientDataRef.get();
-        if (warn != null && clientData.getWarning() < 100) {
+        if (warn != null && clientData.getWarning() > 0) {
             SculkHeart heart = new SculkHeart(SculkHeart.Type.SCULK, false, true);
             RenderSystem.enableBlend(); // Forge disables blend at the end of the function.
             HelperMethodsForMixins.drawSculkWarning(guiGraphics, clientData, heart, warn);

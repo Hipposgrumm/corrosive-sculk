@@ -9,11 +9,12 @@ import net.minecraft.network.chat.Component;
 import java.io.IOException;
 
 public class ConfigScreen {
-    private static boolean[] vals = new boolean[2];
+    private static Object[] vals = new Object[3];
 
     public static Screen create(Screen parent) {
-        vals = new boolean[] {
-                Config.sculkResistHeals,
+        vals = new Object[] {
+                Config.sculkWarnSound,
+                Config.sculkHealCircumstance,
                 Config.sculkResistInvul
         };
 
@@ -24,14 +25,31 @@ public class ConfigScreen {
         if (Config.file.exists()) {
             ConfigEntryBuilder entryBuilder = builder.entryBuilder();
 
-            builder.getOrCreateCategory(Component.translatable("gui.corrosive_sculk.config.category.assist_mode"))
+            /*
+            builder.getOrCreateCategory(Component.empty())
                     .addEntry(entryBuilder
-                            .startBooleanToggle(Component.translatable("gui.corrosive_sculk.config.option.sculk_resist_heals"), Config.sculkResistHeals)
-                            .setTooltip(Component.translatable("gui.corrosive_sculk.config.option.sculk_resist_heals.desc"))
+                            .startBooleanToggle(Component.translatable("gui.corrosive_sculk.config.option.sculk_warn_sound"), Config.sculkWarnSound)
+                            .setTooltip(Component.translatable("gui.corrosive_sculk.config.option.sculk_warn_sound.desc"))
                             .setDefaultValue(true)
                             .setSaveConsumer(val -> {
                                 vals[0] = val;
-                                Config.sculkResistHeals = val;
+                                Config.sculkWarnSound = val;
+                                save();
+                            }).build()
+                    );
+            */
+
+            builder.getOrCreateCategory(Component.translatable("gui.corrosive_sculk.config.category.assist_mode"))
+                    .addEntry(entryBuilder
+                            .startEnumSelector(Component.translatable("gui.corrosive_sculk.config.option.healing_circumstance"), Config.HealingCircumstance.class, Config.sculkHealCircumstance)
+                            .setTooltip(Component.translatable("gui.corrosive_sculk.config.option.healing_circumstance.desc")
+                                    .append("\nNORMAL - ").append(Component.translatable("gui.corrosive_sculk.config.option.healing_circumstance.desc.0"))
+                                    .append("\nRESIST - ").append(Component.translatable("gui.corrosive_sculk.config.option.healing_circumstance.desc.1"))
+                                    .append("\nALWAYS - ").append(Component.translatable("gui.corrosive_sculk.config.option.healing_circumstance.desc.2"))
+                            ).setDefaultValue(Config.HealingCircumstance.NORMAL)
+                            .setSaveConsumer(val -> {
+                                vals[1] = val;
+                                Config.sculkHealCircumstance = val;
                                 save();
                             }).build()
                     ).addEntry(entryBuilder
@@ -39,7 +57,7 @@ public class ConfigScreen {
                             .setTooltip(Component.translatable("gui.corrosive_sculk.config.option.sculk_resist_invul.desc"))
                             .setDefaultValue(false)
                             .setSaveConsumer(val -> {
-                                vals[1] = val;
+                                vals[2] = val;
                                 Config.sculkResistInvul = val;
                                 save();
                             }).build()

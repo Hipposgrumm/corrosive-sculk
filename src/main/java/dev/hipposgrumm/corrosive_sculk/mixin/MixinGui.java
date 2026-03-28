@@ -17,10 +17,12 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Gui.class)
@@ -138,7 +140,7 @@ public class MixinGui {
         // Can be multiple for absorption hearts.
 
         SculkDamageCapability.ClientData clientData = clientDataRef.get();
-        if (clientData.getWarning() < 100) {
+        if (clientData.getWarning() > 0) {
             SculkHeart heart = new SculkHeart(SculkHeart.Type.SCULK, hardcore.get(), false);
             WarnHeartData[] abswarn = absorbHeartRef.get();
             if (abswarn != null) {
@@ -157,5 +159,81 @@ public class MixinGui {
     @WrapOperation(method = "renderVehicleHealth", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;blit(Lnet/minecraft/resources/ResourceLocation;IIIIII)V"))
     private void corrosive_sculk$changeHorseHearts(GuiGraphics instance, ResourceLocation texture_location, int screenX, int screenY, int textureX, int textureY, int width, int height, Operation<Void> original) {
         original.call(instance, texture_location, screenX, screenY, textureX, textureY, width, height);
+    }
+
+    @ModifyVariable(remap = false, method = "renderVehicleHealth", at = @At("STORE"), ordinal = 0)
+    private int corrosive_sculk$initHorseHearts(int remainingHearts,
+                                                         @Local LivingEntity horse,
+                                                         @Share("isSculkHeart") LocalBooleanRef isSculkHeart,
+                                                         @Share("lastDrawnHeart") LocalIntRef lastDrawnHeart,
+                                                         @Share("totalHearts") LocalIntRef totalHearts,
+                                                         @Share("clientData") LocalRef<SculkDamageCapability.ClientData> clientDataRef) {
+        SculkDamageCapability.ClientData clientData = clientDataRef.get();
+        if (clientData == null) {
+            lastDrawnHeart.set(-1);
+            isSculkHeart.set(true); // Set sculk hearts begin.
+            clientData = SculkDamageCapability.ENTITIES.getOrDefault(horse.getId(), SculkDamageCapability.ClientData.EMPTY);
+            clientDataRef.set(clientData);
+            remainingHearts += clientData.getMaxProtection();
+            totalHearts.set(remainingHearts); // This value decrements every row so we have to save it at the start.
+        }
+
+        return remainingHearts;
+    }
+
+    @WrapOperation(remap = false, method = "renderVehicleHealth", at = @At(remap = true, value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;blit(Lnet/minecraft/resources/ResourceLocation;IIIIII)V"))
+    private void corrosive_sculk$changeHorseHearts(GuiGraphics instance, ResourceLocation texture_location, int x, int y, int textureX, int textureY, int width, int height, Operation<Void> original,
+                                                            @Local(ordinal = 5) int row,
+                                                            @Local(ordinal = 7) int currentHeart,
+                                                            @Share("lastDrawnHeart") LocalIntRef lastDrawnHeart,
+                                                            @Share("totalHearts") LocalIntRef totalHearts,
+                                                            @Share("clientData") LocalRef<SculkDamageCapability.ClientData> clientDataRef,
+                                                            @Share("warnedHeart") LocalRef<WarnHeartData> warnedHeartRef) {
+        // This can initialize most important things, namely things that need to be initialized immediately.
+        SculkDamageCapability.ClientData clientData = clientDataRef.get();
+
+        currentHeart += row/2;
+        currentHeart = totalHearts.get() - currentHeart - 1;
+        if (lastDrawnHeart.get() == currentHeart) return; // Skip drawing the heart if already drawn once.
+
+        // Counting hearts in decrementing order (last heart is 0).
+        SculkHeart sculkHeart = null;
+        int checkedHeart = currentHeart - clientData.getMaxProtection(); // Quick and dirty way to check if it's below protection hearts.
+        if (checkedHeart < 0) { // Sculk Resistance
+            if (checkedHeart < -clientData.getProtection()) {
+                textureY = 18;
+            } else {
+                textureY = 0;
+            }
+            sculkHeart = new SculkHeart(SculkHeart.Type.SCULK_RESIST, false, true);
+        } else if (checkedHeart < clientData.getDamage()) { // Sculk Damage
+            textureY = 0;
+            sculkHeart = new SculkHeart(SculkHeart.Type.SCULK, false, true);
+        }
+
+        if (sculkHeart != null) {
+            instance.blit(HelperMethodsForMixins.SCULK_HEARTS_TEXTURE, x, y, sculkHeart.xOffset(), textureY, 9, 9, 64, 32);
+            lastDrawnHeart.set(currentHeart); // Don't run through drawing this heart again, if it's a sculk heart.
+        } else {
+            original.call(instance, texture_location, x, y, textureX, textureY, width, height);
+
+            // The warning is drawn after original heart.
+            // Since we're in reverse, always be setting this.
+            // Due to how horse hearts are rendered, we can get away with rendering this last.
+            warnedHeartRef.set(new WarnHeartData(currentHeart, x, y));
+        }
+    }
+
+    @Inject(remap = false, method = "renderVehicleHealth", at = @At("TAIL"))
+    private void corrosive_sculk$finishHorseSculkHearts(GuiGraphics guiGraphics, CallbackInfo ci,
+                                                                 @Share("clientData") LocalRef<SculkDamageCapability.ClientData> clientDataRef,
+                                                                 @Share("warnedHeart") LocalRef<WarnHeartData> warnedHeartRef) {
+        // Draw the warning, which will always be last.
+        WarnHeartData warn = warnedHeartRef.get();
+        SculkDamageCapability.ClientData clientData = clientDataRef.get();
+        if (warn != null && clientData.getWarning() > 0) {
+            SculkHeart heart = new SculkHeart(SculkHeart.Type.SCULK, false, true);
+            HelperMethodsForMixins.drawSculkWarning(guiGraphics, clientData, heart, warn);
+        }
     }
 }

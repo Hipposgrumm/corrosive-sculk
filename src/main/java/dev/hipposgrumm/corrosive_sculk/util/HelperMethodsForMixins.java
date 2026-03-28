@@ -6,10 +6,13 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 
 public class HelperMethodsForMixins {
-    public static final ResourceLocation SCULK_HEARTS_TEXTURE = ResourceLocation.fromNamespaceAndPath(CorrosiveSculk.MODID, "textures/gui/sculk_hearts.png");
+    public static final ResourceLocation SCULK_HEARTS_TEXTURE =
+            //$ resourcelocation
+            ResourceLocation.fromNamespaceAndPath
+            (CorrosiveSculk.MODID, "textures/gui/sculk_hearts.png");
 
     public static void drawSculkWarning(GuiGraphics guiGraphics, SculkDamageCapability.ClientData clientData, SculkHeart heart, WarnHeartData warn) {
-        guiGraphics.setColor(1, 1, 1, 1-(clientData.getWarning() / 100f));
+        guiGraphics.setColor(1, 1, 1, clientData.getWarning() / 100f);
         guiGraphics.blit(SCULK_HEARTS_TEXTURE, warn.x(), warn.y(), heart.xOffset(), 0, 9, 9, 64, 32);
         guiGraphics.setColor(1, 1, 1, 1);
     }

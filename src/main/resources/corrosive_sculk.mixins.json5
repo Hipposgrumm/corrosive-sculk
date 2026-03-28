@@ -8,10 +8,12 @@
     "MixinPlayer"
   ],
   "client": [
-    "MixinDisableMantleHeartsRender",
-    "MixinGui",
-    //? if forge
-    "MixinForgeGui"
+    //? if forgebase {
+      //? if =1.20.1
+      "MixinDisableMantleHeartsRender",
+    "MixinForgeGui",
+    //?}
+    "MixinGui"
   ],
   "minVersion": "0.8",
   "mixinextras": {"minVersion": "0.5.0"}

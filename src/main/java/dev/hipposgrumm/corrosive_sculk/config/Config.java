@@ -12,6 +12,7 @@ import java.util.*;
 import java.util.function.Function;
 
 //? if forge {
+import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.fml.loading.FMLPaths;
 //?} else {
 /*import net.fabricmc.loader.api.FabricLoader;
@@ -19,17 +20,19 @@ import net.minecraftforge.fml.loading.FMLPaths;
 
 public class Config {
     private static final String[] OPTION_NAMES = {
-            "Sculk Resistance Heals Sculk",
+            "Sculk Warning Sound", // Sculk warning sound is unavailable because I couldn't make anything that didn't sound obnoxious
+            "Sculk Healing Circumstance",
             "Sculk Resistance Grants Immunity"
     };
-    private static final boolean[] OPTION_DEFAULTS = {
-            false,  // Sculk Resistance Heals Sculk
-            false   // Sculk Resistance Grants Immunity
+    private static final Object[] OPTION_DEFAULTS = {
+            true,                       // Sculk Warning Sound
+            HealingCircumstance.NORMAL, // Sculk Healing Circumstance
+            false                       // Sculk Resistance Grants Immunity
     };
 
     static final File file;
     static final Watcher watcher;
-    private static final HashMap<String, Boolean> config = new HashMap<>();
+    private static final HashMap<String, Object> config = new HashMap<>();
 
     static {
         //? if fabric {
@@ -42,7 +45,8 @@ public class Config {
         watcher = new Watcher(file);
     }
 
-    public static boolean sculkResistHeals;
+    public static boolean sculkWarnSound;
+    public static HealingCircumstance sculkHealCircumstance;
     public static boolean sculkResistInvul;
 
     public static void registerConfig() {
@@ -60,10 +64,10 @@ public class Config {
 
         watcher.start();
 
-        refreshOptions();
+        loadConfig();
     }
 
-    static String writeConfig(boolean[] vals) {
+    static String writeConfig(Object[] vals) {
         Language lang = Language.getInstance();
         Map<String, String> mine = new HashMap<>();
 
@@ -79,13 +83,25 @@ public class Config {
             }
         };
 
-        String contents = """
+        String contents = "";
+
+        //? if forge {
+        if (FMLEnvironment.dist.isClient())
+        //?} else {
+        /*if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT)
+        *///?}
+            ;//contents += writeOption(OPTION_NAMES[0], vals[0], get.apply("gui.corrosive_sculk.config.option.sculk_warn_sound.desc"));
+        contents += """
         ["Assist Mode"]
         # Options that may make the mod easier or not as punishing.
         
         """;
-        contents += writeOption(OPTION_NAMES[0], vals[0], get.apply("gui.corrosive_sculk.config.option.sculk_resist_heals.desc"));
-        contents += writeOption(OPTION_NAMES[1], vals[1], get.apply("gui.corrosive_sculk.config.option.sculk_resist_invul.desc"));
+        contents += writeOption(OPTION_NAMES[1], vals[1], get.apply("gui.corrosive_sculk.config.option.healing_circumstance.desc")
+                +"\nNORMAL - "+get.apply("gui.corrosive_sculk.config.option.healing_circumstance.desc.0")
+                +"\nRESIST - "+get.apply("gui.corrosive_sculk.config.option.healing_circumstance.desc.1")
+                +"\nALWAYS - "+get.apply("gui.corrosive_sculk.config.option.healing_circumstance.desc.2")
+        );
+        contents += writeOption(OPTION_NAMES[2], vals[2], get.apply("gui.corrosive_sculk.config.option.sculk_resist_invul.desc"));
         return contents;
     }
 
@@ -104,6 +120,9 @@ public class Config {
 
     private static void loadConfig() {
         config.clear();
+        for (int i=0;i<OPTION_NAMES.length;i++) {
+            config.put(OPTION_NAMES[i], OPTION_DEFAULTS[i]);
+        }
         try {
             Scanner reader = new Scanner(file);
             for(int l=1;reader.hasNextLine();l++) {
@@ -127,7 +146,19 @@ public class Config {
                             int index = entry.indexOf('=');
                             if (entry.indexOf('=') >= 0) {
                                 entry = entry.substring(index+1).trim();
-                                config.put(key.toString(), Boolean.valueOf(entry));
+                                String keyString = key.toString();
+                                if (!config.containsKey(keyString)) continue;
+                                Class<?> objtype = config.get(keyString).getClass();
+                                if (objtype == Boolean.class) {
+                                    config.put(keyString, Boolean.valueOf(entry));
+                                } else if (objtype == HealingCircumstance.class) {
+                                    for (HealingCircumstance val:HealingCircumstance.values()) {
+                                        if (val.name.equals(entry)) {
+                                            config.put(keyString, val);
+                                        }
+                                    }
+                                    // If none match, it has already been set to default, nothing bad happens.
+                                } else throw new UnsupportedOperationException("class type "+objtype.getName()+" is not handled by config");
                             } else {
                                 CorrosiveSculk.LOGGER.warn("Syntax error in config/{}: no value found on line {} (missing (\"=\"))", file.getName(), l);
                             }
@@ -144,8 +175,9 @@ public class Config {
     }
 
     private static void refreshOptions() {
-        sculkResistHeals = config.getOrDefault(OPTION_NAMES[0], OPTION_DEFAULTS[0]);
-        sculkResistInvul = config.getOrDefault(OPTION_NAMES[1], OPTION_DEFAULTS[1]);
+        sculkWarnSound = (boolean) config.getOrDefault(OPTION_NAMES[0], OPTION_DEFAULTS[0]);
+        sculkHealCircumstance = (HealingCircumstance) config.getOrDefault(OPTION_NAMES[1], OPTION_DEFAULTS[1]);
+        sculkResistInvul = (boolean) config.getOrDefault(OPTION_NAMES[2], OPTION_DEFAULTS[2]);
     }
 
     public static class Watcher extends TimerTask {
@@ -173,6 +205,28 @@ public class Config {
                 CorrosiveSculk.LOGGER.info("Config {} was updated!", file.getName());
                 this.timeStamp = timeStamp;
             }
+        }
+    }
+
+    public enum HealingCircumstance {
+        NORMAL("NORMAL", true, false),
+        RESIST("RESIST", true, true),
+        ALWAYS("ALWAYS", false, true);
+
+        public final String name;
+        public final boolean hasSculkDamage;
+        public final boolean resistDoesHealing;
+
+        HealingCircumstance(String name, boolean hasSculkDamage, boolean resistDoesHealing) {
+            this.name = name;
+            this.hasSculkDamage = hasSculkDamage;
+            this.resistDoesHealing = resistDoesHealing;
+        }
+
+
+        @Override
+        public String toString() {
+            return name;
         }
     }
 }

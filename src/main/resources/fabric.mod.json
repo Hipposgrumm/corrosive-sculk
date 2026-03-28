@@ -7,14 +7,24 @@
   "authors": [
     "${author}"
   ],
-  "contact": {},
+  "contact": {
+    "sources": "https://github.com/Hipposgrumm/corrosive-sculk",
+    "homepage": "https://github.com/Hipposgrumm/corrosive-sculk",
+    "issues": "https://github.com/Hipposgrumm/corrosive-sculk/issues"
+  },
   "license": "${license}",
-  "icon": "assets/${modid}/mod.png",
+  "icon": "${modid}.png",
   "environment": "*",
   "accessWidener" : "${modid}.accesswidener",
   "entrypoints": {
     "main": [
-      "${group}.${modid}.ExampleModMain"
+      "${group}.${modid}.CorrosiveSculk"
+    ],
+    "client": [
+      "${group}.${modid}.CorrosiveSculkClientside"
+    ],
+    "modmenu": [
+      "${group}.${modid}.config.ModMenuAccess"
     ]
   },
   "mixins": [
