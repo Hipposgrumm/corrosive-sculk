@@ -1,18 +1,26 @@
 package dev.hipposgrumm.corrosive_sculk.loot;
 
-//? if forge {
+//? if forgebase {
 import com.google.common.base.Suppliers;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.hipposgrumm.corrosive_sculk.CorrosiveSculk;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
+
+//? if neoforge {
+/*import net.neoforged.neoforge.common.loot.IGlobalLootModifier;
+import net.neoforged.neoforge.common.loot.LootModifier;
+*///?} else {
 import net.minecraftforge.common.loot.IGlobalLootModifier;
 import net.minecraftforge.common.loot.LootModifier;
 import net.minecraftforge.registries.ForgeRegistries;
+//?}
 
 import javax.annotation.Nonnull;
 import java.util.function.Supplier;
@@ -43,12 +51,12 @@ public class LootModifierAddSculkToleranceItem extends LootModifier {
         return generatedLoot;
     }
 
-    public static final Supplier<Codec<LootModifierAddSculkToleranceItem>> CODEC = Suppliers.memoize(() -> RecordCodecBuilder.create(inst -> codecStart(inst).and(inst.group(
-            ForgeRegistries.ITEMS.getCodec().fieldOf("item").forGetter(m -> m.item),
+    public static final Supplier</*? if neoforge {*//*MapCodec*//*?} else {*/Codec/*?}*/<LootModifierAddSculkToleranceItem>> CODEC = Suppliers.memoize(() -> RecordCodecBuilder./*? if neoforge {*//*mapCodec*//*?} else {*/create/*?}*/(inst -> codecStart(inst).and(inst.group(
+            /*? if neoforge {*//*BuiltInRegistries.ITEM.byNameCodec*//*?} else {*/ForgeRegistries.ITEMS.getCodec/*?}*/().fieldOf("item").forGetter(m -> m.item),
             Codec.FLOAT.fieldOf("chance").forGetter(m -> m.chance)
     )).apply(inst, LootModifierAddSculkToleranceItem::new)));
     @Override
-    public Codec<? extends IGlobalLootModifier> codec() {
+    public /*? if neoforge {*//*MapCodec*//*?} else {*/Codec/*?}*/<? extends IGlobalLootModifier> codec() {
         return CODEC.get();
     }
 }

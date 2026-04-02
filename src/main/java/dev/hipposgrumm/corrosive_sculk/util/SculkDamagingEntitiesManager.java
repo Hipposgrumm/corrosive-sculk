@@ -3,45 +3,44 @@ package dev.hipposgrumm.corrosive_sculk.util;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.*;
 import dev.hipposgrumm.corrosive_sculk.CorrosiveSculk;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.packs.PackResources;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.CloseableResourceManager;
 import net.minecraft.server.packs.resources.IoSupplier;
-import net.minecraft.util.GsonHelper;
-import net.minecraft.world.entity.Entity;
-//? if forge {
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
+import net.minecraft.util.GsonHelper;
 import net.minecraft.util.profiling.ProfilerFiller;
+import net.minecraft.world.entity.Entity;
+//? if neoforge {
+//?} elif forge {
 import net.minecraftforge.registries.ForgeRegistries;
 //?} else {
-/*import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
-import net.minecraft.core.registries.BuiltInRegistries;
+/*import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
 *///?}
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
-public class SculkDamagingEntitiesManager
-    //? if forgebase {
-    extends SimplePreparableReloadListener<Void>
-    //?} else {
-    /*implements ServerLifecycleEvents.EndDataPackReload
-    *///?}
+public class SculkDamagingEntitiesManager extends SimplePreparableReloadListener<Void>
+    //? if fabric
+    /*implements IdentifiableResourceReloadListener*/
 {
     private Map<ResourceLocation,Integer> SCULK_DAMAGING_ENTITIES = ImmutableMap.of();
 
-    //? if forgebase {
+    //? if fabric {
+    /*private static final ResourceLocation ID = new ResourceLocation(CorrosiveSculk.MODID, "sculk_damaging_entities");
+    @Override public ResourceLocation getFabricId() {
+        return ID;
+    }
+    *///?}
+
     @Override
     protected Void prepare(ResourceManager resourceManager, ProfilerFiller profiler) {
-    //?} else {
-    /*@Override
-    public void endDataPackReload(MinecraftServer server, CloseableResourceManager resourceManager, boolean success) {
-        if (!success) return;
-    *///?}
         ImmutableMap.Builder<ResourceLocation, Integer> builder = ImmutableMap.builder();
         for (PackResources pack:resourceManager.listPacks().toList()) {
             for (String namespace:pack.getNamespaces(PackType.SERVER_DATA)) {
@@ -62,7 +61,7 @@ public class SculkDamagingEntitiesManager
                             try {
                                 JsonObject jsonobject = GsonHelper.parse(reader);
                                 for(String entry : jsonobject.keySet()) {
-                                    //? if forgebase {
+                                    //? if forge {
                                     ResourceLocation entity = ResourceLocation.parse(entry);
                                     //?} else {
                                     /*ResourceLocation entity = ResourceLocation.tryParse(entry);
@@ -70,7 +69,7 @@ public class SculkDamagingEntitiesManager
                                     try {
                                                             // The number is multiplied by 2 because each heart is 2 health.
                                                             // Using getAsDouble() before subsequently casting to int is just user-proofing.
-                                        builder.put(entity, (int) (jsonobject.get(entry).getAsDouble()*2));
+                                        builder.put(entity, (int) (jsonobject.get(entry).getAsDouble()));
                                     } catch (NumberFormatException ignored) {}
                                 }
                             } catch (Throwable parseError) {
@@ -101,17 +100,14 @@ public class SculkDamagingEntitiesManager
             }
         }
         this.SCULK_DAMAGING_ENTITIES = builder.build();
-        //? if forgebase
         return null;
     }
 
-    //? if forgebase {
     @Override
     protected void apply(Void v, ResourceManager resourceManager, ProfilerFiller profiler) {}
-    //?}
 
     public int getEntitySculkDamage(Entity entity) {
-        return getEntitySculkDamage(/*? if forgebase {*/ForgeRegistries.ENTITY_TYPES/*?} else {*//*BuiltInRegistries.ENTITY_TYPE*//*?}*/.getKey(entity.getType()));
+        return getEntitySculkDamage(/*? if forge {*/ForgeRegistries.ENTITY_TYPES/*?} else {*//*BuiltInRegistries.ENTITY_TYPE*//*?}*/.getKey(entity.getType()));
     }
 
     public int getEntitySculkDamage(ResourceLocation entity) {

@@ -1,0 +1,25 @@
+{ // I couldn't make this work out nicely so I instead decided to make it as egregious as possible.
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "WS",
+    "SW"
+  ],
+  "key": {
+    "S": {
+      "item": "minecraft:sculk_vein"
+    },
+    "W": {
+      "tag": "minecraft:wool_carpets"
+    }
+  },
+  "result": {
+    //? if >1.20.5 {
+    /*"id":
+    *///?} else
+    "item":
+    "corrosive_sculk:woven_sculk_vein",
+    "count": 5
+  },
+  "show_notification": true
+}

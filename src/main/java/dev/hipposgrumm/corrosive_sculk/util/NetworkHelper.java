@@ -9,7 +9,10 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 
-//? if forge {
+//? if neoforge {
+/*import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
+*///?} elif forge {
 import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.NetworkEvent;
 import net.minecraftforge.network.NetworkRegistry;
@@ -22,15 +25,35 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 *///?}
 
 public class NetworkHelper {
-    //? if forgebase {
+
+    //? if forgebase && <1.20.5 {
     private static SimpleChannel NETWORK_INSTANCE;
     private static int packetID = 0;
     //?}
 
     //? if forgebase {
-    public static void init() {
+    public static void init(/*? if neoforge {*//*RegisterPayloadHandlersEvent event*//*?}*/) {
+        //? if >=1.20.5 {
+        /*event.registrar(CorrosiveSculk.MODID).versioned("2.0")
+                .playToClient(
+                        SculkDamageSyncPacket.TYPE,
+                        SculkDamageSyncPacket.CODEC,
+                        (packet, context) -> {
+                            context.enqueueWork(packet::handleClient);
+                        }
+                ).playToClient(
+                        SculkDamageSoundPacket.TYPE,
+                        SculkDamageSoundPacket.CODEC,
+                        (packet, context) -> {
+                            context.enqueueWork(packet::handleClient);
+                        }
+                );
+        *///?} else {
         NETWORK_INSTANCE = NetworkRegistry.ChannelBuilder
-                .named(ResourceLocation.fromNamespaceAndPath(CorrosiveSculk.MODID, "messages"))
+                .named(
+                        //$ resourcelocation
+                        ResourceLocation.fromNamespaceAndPath
+                                (CorrosiveSculk.MODID, "messages"))
                 .networkProtocolVersion(() -> "2.0")
                 .clientAcceptedVersions("2.0"::equals)
                 .serverAcceptedVersions("2.0"::equals)
@@ -51,25 +74,45 @@ public class NetworkHelper {
                     NetworkEvent.Context context = supplier.get();
                     context.enqueueWork(packet::handleClient);
                 }).add();
+        //?}
     }
     //?}
 
+    @SuppressWarnings("SuspiciousIndentAfterControlStatement")
     public static void send(ServerPlayer player, CorrosiveSculkPacket packet) {
         if (player == null) return;
         //? if forgebase {
-        NETWORK_INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), packet);
-        //?} else {
+            //? if >=1.20.5 {
+            /*PacketDistributor.sendToPlayer(player, packet);
+            *///?} else {
+            NETWORK_INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), packet);
+            //?}
+        //?} elif >=1.20.5 {
+        /*ServerPlayNetworking.send(player, packet);
+        *///?} else {
         /*FriendlyByteBuf data = PacketByteBufs.create();
         packet.toBytes(data);
         ServerPlayNetworking.send(player, packet.getID(), data);
         *///?}
     }
 
+    @SuppressWarnings("SuspiciousIndentAfterControlStatement")
     public static void sendTracking(Entity entity, CorrosiveSculkPacket packet) {
         //? if forgebase {
         if (entity == null) return;
-        NETWORK_INSTANCE.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> entity), packet);
-        //?} else {
+            //? if >=1.20.5 {
+            /*PacketDistributor.sendToPlayersTrackingEntityAndSelf(entity, packet);
+            *///?} else {
+            NETWORK_INSTANCE.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> entity), packet);
+            //?}
+        //?} elif >=1.20.5 {
+        /*ServerPlayer player = entity instanceof ServerPlayer p ? p : null;
+        for (ServerPlayer rec:PlayerLookup.tracking(entity)) {
+            if (player == rec) player = null;
+            ServerPlayNetworking.send(rec, packet);
+        }
+        if (player != null) ServerPlayNetworking.send(player, packet);
+        *///?} else {
         /*FriendlyByteBuf data = PacketByteBufs.create();
         packet.toBytes(data);
         ServerPlayer player = entity instanceof ServerPlayer p ? p : null;

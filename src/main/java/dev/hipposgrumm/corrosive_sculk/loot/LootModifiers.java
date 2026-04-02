@@ -19,6 +19,7 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemRandomChanceCondition;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 
+import java.util.List;
 import java.util.function.Consumer;
 
 public class LootModifiers {
@@ -44,7 +45,7 @@ public class LootModifiers {
     private static class SculkToleranceLootItem extends LootPoolSingletonContainer {
         final Item item;
 
-        private SculkToleranceLootItem(Item item, int weight, int quality, LootItemCondition[] lootItemConditions, LootItemFunction[] lootItemFunctions) {
+        private SculkToleranceLootItem(Item item, int weight, int quality, List<LootItemCondition> lootItemConditions, List<LootItemFunction> lootItemFunctions/^? if >1.20.1 {^//^?} else {^//^LootItemCondition[] lootItemConditions, LootItemFunction[] lootItemFunctions^//^?}^/) {
             super(weight, quality, lootItemConditions, lootItemFunctions);
             this.item = item;
         }

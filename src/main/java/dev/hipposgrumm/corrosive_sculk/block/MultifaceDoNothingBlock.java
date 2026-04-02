@@ -1,5 +1,6 @@
 package dev.hipposgrumm.corrosive_sculk.block;
 
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
@@ -26,6 +27,13 @@ public class MultifaceDoNothingBlock extends MultifaceBlock implements SimpleWat
         super(properties);
         this.registerDefaultState(this.defaultBlockState().setValue(WATERLOGGED, false));
     }
+
+    //? if >1.20.1 {
+    /*public static final MapCodec<MultifaceDoNothingBlock> CODEC = simpleCodec(MultifaceDoNothingBlock::new);
+    @Override protected MapCodec<? extends MultifaceBlock> codec() {
+        return CODEC;
+    }
+    *///?}
 
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> arg) {
         super.createBlockStateDefinition(arg.add(WATERLOGGED));

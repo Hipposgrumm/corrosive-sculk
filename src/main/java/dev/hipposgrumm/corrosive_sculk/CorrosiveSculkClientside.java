@@ -3,13 +3,22 @@ package dev.hipposgrumm.corrosive_sculk;
 import dev.hipposgrumm.corrosive_sculk.config.ConfigScreen;
 import dev.hipposgrumm.corrosive_sculk.network.SculkDamageSoundPacket;
 import dev.hipposgrumm.corrosive_sculk.network.SculkDamageSyncPacket;
+import dev.hipposgrumm.corrosive_sculk.util.HelperMethodsForMixins;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 
-//? if forge {
+//? if neoforge {
+/*import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.ModList;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
+*///?} elif forge {
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.ConfigScreenHandler;
@@ -22,6 +31,9 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+    //? if >=1.20.5 {
+    import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
+    //?}
 *///?}
 
 import java.util.function.Consumer;
@@ -36,32 +48,57 @@ public class CorrosiveSculkClientside
         /*implements ClientModInitializer*/
 {
     //? if forgebase {
-    static void setup(FMLJavaModLoadingContext context, IEventBus bus) {
+    static void setup(/*? if neoforge {*//*ModContainer*//*?} else {*/FMLJavaModLoadingContext/*?}*/ context, IEventBus bus) {
     //?} else {
     /*@Override
     public void onInitializeClient() {
     *///?}
+        HelperMethodsForMixins.loadStaticData();
 
         //? if forgebase {
         bus.addListener((Consumer<FMLClientSetupEvent>)
                 (event -> clientSetup(event, context))
         );
         //?} else {
-        /*ClientPlayNetworking.registerGlobalReceiver(SculkDamageSyncPacket.ID, (client, handler, buf, responseSender) -> {
+            /*//? if >=1.20.5 {
+            PayloadTypeRegistry.playS2C().register(SculkDamageSyncPacket.TYPE, SculkDamageSyncPacket.CODEC);
+            PayloadTypeRegistry.playS2C().register(SculkDamageSoundPacket.TYPE, SculkDamageSoundPacket.CODEC);
+            //?}
+        ClientPlayNetworking.registerGlobalReceiver(SculkDamageSyncPacket./^? if >=1.20.5 {^/TYPE/^?} else {^//^ID^//^?}^/,
+            //? if >=1.20.5 {
+            (packet, ctx) -> {
+            Minecraft client = ctx.client();
+            //?} else {
+            /^(client, handler, buf, responseSender) -> {
             SculkDamageSyncPacket packet = new SculkDamageSyncPacket(buf);
+            ^///?}
             client.execute(packet::handleClient);
         });
-        ClientPlayNetworking.registerGlobalReceiver(SculkDamageSoundPacket.ID, (client, handler, buf, responseSender) -> {
+        ClientPlayNetworking.registerGlobalReceiver(SculkDamageSoundPacket./^? if >=1.20.5 {^/TYPE/^?} else {^//^ID^//^?}^/,
+            //? if >=1.20.5 {
+            (packet, ctx) -> {
+            Minecraft client = ctx.client();
+            //?} else {
+            /^(client, handler, buf, responseSender) -> {
             SculkDamageSoundPacket packet = new SculkDamageSoundPacket(buf);
+            ^///?}
             client.execute(packet::handleClient);
         });
         *///?}
     }
 
     //? if forgebase {
-    private static void clientSetup(FMLClientSetupEvent event, FMLJavaModLoadingContext context) {
+    private static void clientSetup(FMLClientSetupEvent event, /*? if neoforge {*//*ModContainer*//*?} else {*/FMLJavaModLoadingContext/*?}*/ context) {
         if (ModList.get().isLoaded("cloth_config")) event.enqueueWork(() -> {
-            context.registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class, () -> new ConfigScreenHandler.ConfigScreenFactory((mc, parent) -> ConfigScreen.create(parent)));
+            context.registerExtensionPoint(
+                    //? if neoforge {
+                    /*IConfigScreenFactory.class
+                    *///?} else {
+                    ConfigScreenHandler.ConfigScreenFactory.class
+                    //?}
+                    , /*? if forge {*/() -> new ConfigScreenHandler.ConfigScreenFactory/*?}*/
+                            ((mc, parent) -> ConfigScreen.create(parent))
+            );
         });
     }
     //?}

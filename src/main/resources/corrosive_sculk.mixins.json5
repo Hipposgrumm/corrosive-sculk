@@ -8,7 +8,7 @@
     "MixinPlayer"
   ],
   "client": [
-    //? if forgebase {
+    //? if forge {
       //? if =1.20.1
       "MixinDisableMantleHeartsRender",
     "MixinForgeGui",

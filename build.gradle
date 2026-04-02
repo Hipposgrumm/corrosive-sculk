@@ -56,9 +56,8 @@ stonecutter {
     stonecutter.const("neoforge", platform == "neoforge")
     stonecutter.const("forgebase", platform.contains("forge"))
     stonecutter.swap("resourcelocation",
-            // TODO: Keep updating this for each version's needs.
-            (platform == "fabric") ? "new ResourceLocation"
-            : "ResourceLocation.fromNamespaceAndPath"
+            (platform == "forge") ? "ResourceLocation.fromNamespaceAndPath"
+            : "new ResourceLocation"
     )
 }
 
@@ -124,9 +123,10 @@ dependencies {
         }
     }
 	
-	if (platform.contains("forge")) {
+	if (stonecutter.eval(mc_version, "=1.20.1")) {
         // stonecutter.excludeFiles() implementation below; I want it to be findable on github
-        stonecutter.exclude("src/main/resources/data/c")
+        stonecutter.exclude("src/main/resources/data/c/tags/items/armors")
+        stonecutter.exclude("src/main/resources/data/corrosive_sculk/tags/items/sculk_tolerance_enchantable.json")
     }
 }
 

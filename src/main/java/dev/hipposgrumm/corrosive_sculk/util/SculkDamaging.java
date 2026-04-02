@@ -15,7 +15,11 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+//? if >=1.20.5 {
+/*import net.minecraft.world.item.AnimalArmorItem;
+*///?} else {
 import net.minecraft.world.item.HorseArmorItem;
+//?}
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.LevelAccessor;
@@ -156,7 +160,6 @@ public class SculkDamaging {
         int resistAmount = 0;
         MobEffectInstance sculkResist = entity.getEffect(CorrosiveSculk.SCULK_RESISTANCE.get());
         if (sculkResist != null) resistAmount += sculkResist.getAmplifier()+1;
-        // TODO: Deeper and Darker Compat?
         if (resistAmount>0) {
             int difference = Math.max(resistAmount-sculkDamage.getMaxProtection(),0);
             sculkDamage.setMaxProtection(resistAmount);
@@ -228,9 +231,9 @@ public class SculkDamaging {
 
     public static int getDamageTime(LivingEntity entity) {
         int tolerance = 40;
-        for (ItemStack armor:entity.getArmorSlots()) {
+        for (ItemStack armor:entity./*? if >=1.20.5 {*//*getArmorAndBodyArmorSlots*//*?} else {*/getArmorSlots/*?}*/()) {
             int level = EnchantmentHelper.getItemEnchantmentLevel(CorrosiveSculk.ENCHANTMENT_SCULK_TOLERANCE.get(), armor);
-            if (armor.getItem() instanceof HorseArmorItem) { // TODO: Dog armor
+            if (armor.getItem() instanceof /*? if >=1.20.5 {*//*AnimalArmorItem*//*?} else {*/HorseArmorItem/*?}*/) {
                 tolerance += level*10;
             } else {
                 tolerance += level*3;

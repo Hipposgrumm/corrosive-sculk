@@ -1,0 +1,13 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:leather_horse_armor",
+    //? if >=1.21.9
+    /*"minecraft:copper_horse_armor",*/
+    "minecraft:iron_horse_armor",
+    "minecraft:diamond_horse_armor",
+    //? if >=1.21.11
+    /*"minecraft:netherite_horse_armor",*/
+    "minecraft:golden_horse_armor",
+  ]
+}

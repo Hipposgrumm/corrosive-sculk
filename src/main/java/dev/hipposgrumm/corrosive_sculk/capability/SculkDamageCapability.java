@@ -2,7 +2,10 @@ package dev.hipposgrumm.corrosive_sculk.capability;
 
 import net.minecraft.nbt.CompoundTag;
 
-//? if forgebase {
+//? if neoforge {
+/*import net.minecraft.core.HolderLookup;
+import net.neoforged.neoforge.common.util.INBTSerializable;
+*///?} elif forge {
 import net.minecraft.core.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
@@ -15,7 +18,10 @@ import net.minecraftforge.common.util.LazyOptional;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SculkDamageCapability {
+public class SculkDamageCapability
+    //? if neoforge
+    /*implements INBTSerializable<CompoundTag>*/
+{
     public static final Map<Integer, ClientData> ENTITIES = new HashMap<>();
 
     private int damage;
@@ -125,7 +131,12 @@ public class SculkDamageCapability {
         this.forceHeal--;
     }
 
-    public void saveNBTData(CompoundTag nbt) {
+    //? if neoforge {
+    /*public CompoundTag serializeNBT(HolderLookup.Provider provider) {
+    *///?} else {
+    public CompoundTag saveNBTData() {
+    //?}
+        CompoundTag nbt = new CompoundTag();
         nbt.putInt("damage", damage);
         nbt.putInt("protection", protection);
         nbt.putInt("maxProtection", maxProtection);
@@ -137,9 +148,14 @@ public class SculkDamageCapability {
         }
         if (healTimer != null) nbt.putInt("healTimer", healTimer);
         nbt.putInt("forceHeal", forceHeal);
+        return nbt;
     }
 
+    //? if neoforge {
+    /*@Override public void deserializeNBT(HolderLookup.Provider provider, CompoundTag nbt) {
+    *///?} else {
     public void loadNBTData(CompoundTag nbt) {
+    //?}
         damage = nbt.getInt("damage");
         protection = nbt.getInt("protection");
         maxProtection = nbt.getInt("maxProtection");
@@ -153,7 +169,7 @@ public class SculkDamageCapability {
         forceHeal = nbt.getInt("forceHeal");
     }
 
-    //? if forgebase {
+    //? if forge {
     public static class Provider implements ICapabilityProvider, INBTSerializable<CompoundTag> {
         public static Capability<SculkDamageCapability> SCULK_DAMAGE = CapabilityManager.get(new CapabilityToken<>(){});
 
@@ -173,8 +189,7 @@ public class SculkDamageCapability {
 
         @Override
         public CompoundTag serializeNBT() {
-            CompoundTag nbt = new CompoundTag();
-            createSculkDamageCapability().saveNBTData(nbt);
+            CompoundTag nbt = createSculkDamageCapability().saveNBTData();
             return nbt;
         }
 

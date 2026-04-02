@@ -11,11 +11,15 @@ import java.nio.file.Path;
 import java.util.*;
 import java.util.function.Function;
 
-//? if forge {
+//? if neoforge {
+/*import net.neoforged.fml.loading.FMLEnvironment;
+import net.neoforged.fml.loading.FMLPaths;
+*///?} elif forge {
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.fml.loading.FMLPaths;
 //?} else {
-/*import net.fabricmc.loader.api.FabricLoader;
+/*import net.fabricmc.api.EnvType;
+import net.fabricmc.loader.api.FabricLoader;
 *///?}
 
 public class Config {
@@ -35,11 +39,14 @@ public class Config {
     private static final HashMap<String, Object> config = new HashMap<>();
 
     static {
-        //? if fabric {
-        /*Path path = FabricLoader.getInstance().getConfigDir();
-         *///?} elif forge {
-        Path path = FMLPaths.CONFIGDIR.get();
-        //?}
+        Path path =
+                //? if neoforge {
+                /*FMLPaths.CONFIGDIR.get();
+                *///?} elif forge {
+                FMLPaths.CONFIGDIR.get();
+                //?} else {
+                /*FabricLoader.getInstance().getConfigDir();
+                *///?}
         file = path.resolve(CorrosiveSculk.MODID + ".toml").toFile();
 
         watcher = new Watcher(file);
@@ -85,7 +92,7 @@ public class Config {
 
         String contents = "";
 
-        //? if forge {
+        //? if forgebase {
         if (FMLEnvironment.dist.isClient())
         //?} else {
         /*if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT)

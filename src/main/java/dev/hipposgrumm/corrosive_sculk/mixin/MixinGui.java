@@ -27,7 +27,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Gui.class)
 public class MixinGui {
+    //? if neoforge {
+    /*@WrapOperation(method = "renderHealthLevel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;getAbsorptionAmount()F"))
+
+    *///?} else {
     @WrapOperation(method = "renderPlayerHealth", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;getAbsorptionAmount()F"))
+    //?}
     private float corrosive_sculk$addProtectionHearts(Player instance, Operation<Float> original) {
         // Add hearts for rendering sculk resistance.
         float hearts = original.call(instance);
@@ -38,14 +43,15 @@ public class MixinGui {
 
     @Expression("? + ? <= 4")
     @ModifyExpressionValue(method = "renderHearts", at = @At("MIXINEXTRAS:EXPRESSION"))
-    private boolean corrosive_sculk$shakeHeartsDespiteResistance(boolean original, @Local(ordinal = 4, argsOnly = true) int currentHealth, @Local(ordinal = 6, argsOnly = true) int absorption,
-                                                                 @Local(ordinal = 11) int currentHeart,
-                                                                 @Local(argsOnly = true) Player player,
-                                                                 @Share("isSculkHeart") LocalBooleanRef isSculkHeart,
-                                                                 @Share("lastDrawnHeart") LocalIntRef lastDrawnHeart,
-                                                                 @Share("totalHearts") LocalIntRef totalHearts,
-                                                                 @Share("clientData") LocalRef<SculkDamageCapability.ClientData> clientDataRef,
-                                                                 @Share("hardcore") LocalBooleanRef hardcore) {
+    private boolean corrosive_sculk$shakeHeartsDespiteResistance( // and also initialize data for the heart rendering
+            boolean original, @Local(ordinal = 4, argsOnly = true) int currentHealth, @Local(ordinal = 6, argsOnly = true) int absorption,
+                                                                  @Local(ordinal = /*? if >1.20.1 {*//*10*//*?} else {*/11/*?}*/) int currentHeart,
+                                                                  @Local(argsOnly = true) Player player,
+                                                                  @Share("isSculkHeart") LocalBooleanRef isSculkHeart,
+                                                                  @Share("lastDrawnHeart") LocalIntRef lastDrawnHeart,
+                                                                  @Share("totalHearts") LocalIntRef totalHearts,
+                                                                  @Share("clientData") LocalRef<SculkDamageCapability.ClientData> clientDataRef,
+                                                                  @Share("hardcore") LocalBooleanRef hardcore) {
         SculkDamageCapability.ClientData clientData = clientDataRef.get();
         if (clientData == null) {
             lastDrawnHeart.set(-1);
@@ -61,9 +67,9 @@ public class MixinGui {
         return currentHealth + absorption - (clientData.getMaxProtection()*2) <= 4;
     }
 
-    @WrapOperation(method = "renderHearts", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;renderHeart(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/client/gui/Gui$HeartType;IIIZZ)V"))
-    private void corrosive_sculk$drawSculkHearts(Gui instance, GuiGraphics guiGraphics, Gui.HeartType type, int x, int y, int textureY, boolean isHighlighted, boolean isHalfHeart, Operation<Void> original,
-                                                 @Local(ordinal = 11) int currentHeart,
+    @WrapOperation(method = "renderHearts", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;renderHeart(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/client/gui/Gui$HeartType;"+/*? if >1.20.1 {*//*"IIZZZ)V"*//*?} else {*/"IIIZZ)V"/*?}*/))
+    private void corrosive_sculk$drawSculkHearts(Gui instance, GuiGraphics guiGraphics, Gui.HeartType type, int x, int y, /*? if >1.20.1 {*//*boolean _hardcore*//*?} else {*/int textureY/*?}*/, boolean isHighlighted, boolean isHalfHeart, Operation<Void> original,
+                                                 @Local(ordinal = /*? if >1.20.1 {*//*10*//*?} else {*/11/*?}*/) int currentHeart,
                                                  @Local(argsOnly = true) Player player,
                                                  @Share("isSculkHeart") LocalBooleanRef isSculkHeart,
                                                  @Share("lastDrawnHeart") LocalIntRef lastDrawnHeart,
@@ -79,15 +85,15 @@ public class MixinGui {
         currentHeart = totalHearts.get() - currentHeart; // Flip it around so that it goes from 0 to max.
         if (lastDrawnHeart.get() == currentHeart) return; // Skip drawing the heart if already drawn once.
 
+        int heartState = SculkHeart.NORMAL;
         SculkHeart sculkHeart = null;
         boolean warnHeart = false;
         if (isSculkHeart.get()) { // If the next heart is being affected by the mod.
             int checkedHeart = currentHeart - clientData.getMaxProtection(); // Quick and dirty way to check if it's below protection hearts.
             if (checkedHeart < 0) { // Sculk Resistance
                 if (checkedHeart < -clientData.getProtection()) {
-                    textureY = 18;
+                    heartState = SculkHeart.EMPTY;
                 } else {
-                    textureY = 0;
                     if (!hasWarnedHeart.get()) // If not already set.
                         warnHeart = true;
                 }
@@ -105,7 +111,6 @@ public class MixinGui {
                         warns[-1-checkedHeart] = new WarnHeartData(currentHeart, x, y);
                     }
                 } else if (checkedHeart < clientData.getDamage()) { // Sculk Damage
-                    textureY = 0;
                     sculkHeart = new SculkHeart(SculkHeart.Type.SCULK, hardcore.get(), false);
                 } else {
                     if (!hasWarnedHeart.get()) // If the warning isn't already set to be rendered.
@@ -116,10 +121,14 @@ public class MixinGui {
         }
 
         if (sculkHeart != null) {
-            guiGraphics.blit(HelperMethodsForMixins.SCULK_HEARTS_TEXTURE, x, y, sculkHeart.xOffset(), textureY, 9, 9, 64, 32);
+            //? if >1.20.1 {
+            /*guiGraphics.blitSprite(sculkHeart.getSprite(heartState), x, y, 9, 9);
+            *///?} else {
+            guiGraphics.blit(HelperMethodsForMixins.SCULK_HEARTS_TEXTURE, x, y, sculkHeart.xOffset(), heartState*9, 9, 9, 64, 32);
+            //?}
             lastDrawnHeart.set(currentHeart); // Don't run through drawing this heart again, if it's a sculk heart.
         } else {
-            original.call(instance, guiGraphics, type, x, y, textureY, isHighlighted, isHalfHeart);
+            original.call(instance, guiGraphics, type, x, y, /*? if >1.20.1 {*//*_hardcore*//*?} else {*/textureY/*?}*/, isHighlighted, isHalfHeart);
         }
 
         // Warning is drawn after the heart.
@@ -156,11 +165,6 @@ public class MixinGui {
         }
     }
 
-    @WrapOperation(method = "renderVehicleHealth", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;blit(Lnet/minecraft/resources/ResourceLocation;IIIIII)V"))
-    private void corrosive_sculk$changeHorseHearts(GuiGraphics instance, ResourceLocation texture_location, int screenX, int screenY, int textureX, int textureY, int width, int height, Operation<Void> original) {
-        original.call(instance, texture_location, screenX, screenY, textureX, textureY, width, height);
-    }
-
     @ModifyVariable(remap = false, method = "renderVehicleHealth", at = @At("STORE"), ordinal = 0)
     private int corrosive_sculk$initHorseHearts(int remainingHearts,
                                                          @Local LivingEntity horse,
@@ -181,8 +185,15 @@ public class MixinGui {
         return remainingHearts;
     }
 
-    @WrapOperation(remap = false, method = "renderVehicleHealth", at = @At(remap = true, value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;blit(Lnet/minecraft/resources/ResourceLocation;IIIIII)V"))
-    private void corrosive_sculk$changeHorseHearts(GuiGraphics instance, ResourceLocation texture_location, int x, int y, int textureX, int textureY, int width, int height, Operation<Void> original,
+    @WrapOperation(remap = false, method = "renderVehicleHealth", at = @At(
+            remap = true, value = "INVOKE", target =
+            //? if >1.20.1 {
+            /*"Lnet/minecraft/client/gui/GuiGraphics;blitSprite(Lnet/minecraft/resources/ResourceLocation;IIII)V"
+            *///?} else {
+            "Lnet/minecraft/client/gui/GuiGraphics;blit(Lnet/minecraft/resources/ResourceLocation;IIIIII)V"
+            //?}
+    ))
+    private void corrosive_sculk$changeHorseHearts(GuiGraphics instance, ResourceLocation texture_location, int x, int y, /*? if <=1.20.1 {*/int textureX, int textureY,/*?}*/ int width, int height, Operation<Void> original,
                                                             @Local(ordinal = 5) int row,
                                                             @Local(ordinal = 7) int currentHeart,
                                                             @Share("lastDrawnHeart") LocalIntRef lastDrawnHeart,
@@ -197,26 +208,32 @@ public class MixinGui {
         if (lastDrawnHeart.get() == currentHeart) return; // Skip drawing the heart if already drawn once.
 
         // Counting hearts in decrementing order (last heart is 0).
+        int heartState = SculkHeart.NORMAL;
         SculkHeart sculkHeart = null;
+        boolean warnHeart = false;
         int checkedHeart = currentHeart - clientData.getMaxProtection(); // Quick and dirty way to check if it's below protection hearts.
         if (checkedHeart < 0) { // Sculk Resistance
             if (checkedHeart < -clientData.getProtection()) {
-                textureY = 18;
-            } else {
-                textureY = 0;
-            }
+                heartState = SculkHeart.EMPTY;
+            } else warnHeart = true;
             sculkHeart = new SculkHeart(SculkHeart.Type.SCULK_RESIST, false, true);
         } else if (checkedHeart < clientData.getDamage()) { // Sculk Damage
-            textureY = 0;
             sculkHeart = new SculkHeart(SculkHeart.Type.SCULK, false, true);
         }
 
         if (sculkHeart != null) {
-            instance.blit(HelperMethodsForMixins.SCULK_HEARTS_TEXTURE, x, y, sculkHeart.xOffset(), textureY, 9, 9, 64, 32);
+            //? if >1.20.1 {
+            /*instance.blitSprite(sculkHeart.getSprite(heartState), x, y, 9, 9);
+            *///?} else {
+            instance.blit(HelperMethodsForMixins.SCULK_HEARTS_TEXTURE, x, y, sculkHeart.xOffset(), heartState*9, 9, 9, 64, 32);
+            //?}
             lastDrawnHeart.set(currentHeart); // Don't run through drawing this heart again, if it's a sculk heart.
         } else {
-            original.call(instance, texture_location, x, y, textureX, textureY, width, height);
+            original.call(instance, texture_location, x, y, /*? if <=1.20.1 {*/textureX, textureY,/*?}*/ width, height);
+            warnHeart = true;
+        }
 
+        if (warnHeart) {
             // The warning is drawn after original heart.
             // Since we're in reverse, always be setting this.
             // Due to how horse hearts are rendered, we can get away with rendering this last.

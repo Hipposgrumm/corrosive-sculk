@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "SW",
+    "WS"
+  ],
+  "key": {
+    "S": {
+      "item": "minecraft:sculk"
+    },
+    "W": {
+      "tag": "minecraft:wool"
+    }
+  },
+  "result": {
+    //? if >1.20.5 {
+    /*"id":
+    *///?} else
+    "item":
+    "corrosive_sculk:woven_sculk",
+    "count": 4
+  },
+  "show_notification": true
+}

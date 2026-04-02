@@ -1,6 +1,6 @@
 package dev.hipposgrumm.corrosive_sculk.mixin;
 
-//? if forgebase {
+//? if forge {
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
@@ -75,12 +75,14 @@ public class MixinForgeGui {
 
         // Counting hearts in decrementing order (last heart is 0).
         SculkHeart sculkHeart = null;
+        boolean warnHeart = false;
         int checkedHeart = currentHeart - clientData.getMaxProtection(); // Quick and dirty way to check if it's below protection hearts.
         if (checkedHeart < 0) { // Sculk Resistance
             if (checkedHeart < -clientData.getProtection()) {
                 textureY = 18;
             } else {
                 textureY = 0;
+                warnHeart = true;
             }
             sculkHeart = new SculkHeart(SculkHeart.Type.SCULK_RESIST, false, true);
         } else if (checkedHeart < clientData.getDamage()) { // Sculk Damage
@@ -93,7 +95,10 @@ public class MixinForgeGui {
             lastDrawnHeart.set(currentHeart); // Don't run through drawing this heart again, if it's a sculk heart.
         } else {
             original.call(instance, texture_location, x, y, textureX, textureY, width, height);
+            warnHeart = true;
+        }
 
+        if (warnHeart) {
             // The warning is drawn after original heart.
             // Since we're in reverse, always be setting this.
             // Due to how horse hearts are rendered, we can get away with rendering this last.

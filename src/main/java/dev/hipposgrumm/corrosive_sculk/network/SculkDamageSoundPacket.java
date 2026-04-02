@@ -4,13 +4,23 @@ import dev.hipposgrumm.corrosive_sculk.CorrosiveSculk;
 import dev.hipposgrumm.corrosive_sculk.CorrosiveSculkClientside;
 import dev.hipposgrumm.corrosive_sculk.config.Config;
 import net.minecraft.network.FriendlyByteBuf;
+//? if >=1.20.5 {
+/*import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+*///?}
 import net.minecraft.resources.ResourceLocation;
-//? if forgebase {
+//? if neoforge {
+/*import net.neoforged.fml.loading.FMLEnvironment;
+*///?} elif forge {
 import net.minecraftforge.fml.loading.FMLEnvironment;
 //?} else {
 /*import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
 *///?}
+
+//? if >=1.20.5
+/*import net.minecraft.network.protocol.common.custom.CustomPacketPayload;*/
 
 public class SculkDamageSoundPacket implements CorrosiveSculkPacket {
     private final Type type;
@@ -23,12 +33,27 @@ public class SculkDamageSoundPacket implements CorrosiveSculkPacket {
         this.type = buf.readEnum(Type.class);
     }
 
-    //? if fabric {
-    /*public static final ResourceLocation ID = new ResourceLocation(CorrosiveSculk.MODID, "do_sound");
+    public static final ResourceLocation ID =
+            //$ resourcelocation
+            ResourceLocation.fromNamespaceAndPath
+                    (CorrosiveSculk.MODID, "do_sound");
 
     @Override
     public ResourceLocation getID() {
         return ID;
+    }
+
+    //? if >=1.20.5 {
+    /*public static final CustomPacketPayload.Type<SculkDamageSoundPacket> TYPE = new CustomPacketPayload.Type<>(ID);
+    public static final StreamCodec<RegistryFriendlyByteBuf, SculkDamageSoundPacket> CODEC = StreamCodec.composite(
+            ByteBufCodecs.INT, p -> p.type.ordinal(),
+            SculkDamageSoundPacket::new
+    );
+    @Override public CustomPacketPayload.Type<? extends CustomPacketPayload> type() {
+        return TYPE;
+    }
+    private SculkDamageSoundPacket(Integer typeOrdinal) {
+        this.type = Type.values()[typeOrdinal];
     }
     *///?}
 
@@ -38,7 +63,7 @@ public class SculkDamageSoundPacket implements CorrosiveSculkPacket {
     }
 
     public void handleClient() {
-        //? if forge {
+        //? if forgebase {
         if (!FMLEnvironment.dist.isClient()) return;
         //?} else {
         /*if (FabricLoader.getInstance().getEnvironmentType() != EnvType.CLIENT) return;

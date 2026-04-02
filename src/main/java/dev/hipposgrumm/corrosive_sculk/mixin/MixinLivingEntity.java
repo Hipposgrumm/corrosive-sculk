@@ -15,7 +15,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 
-import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
 //? if fabric
@@ -32,12 +31,16 @@ public class MixinLivingEntity
     private float corrosive_sculk$dontHealthBeyondSculk(LivingEntity instance, Operation<Float> original) {
         if (!Config.sculkHealCircumstance.hasSculkDamage) return original.call(instance);
         AtomicInteger sculkHealth = new AtomicInteger();
-        //? if forgebase {
-        instance.getCapability(SculkDamageCapability.Provider.SCULK_DAMAGE)
-        //?} else {
-        /*corrosive_sculk$getSculkData() // We don't need casting on this since it's literally right here.
-        *///?}
-                .ifPresent(damageCapability -> sculkHealth.set(damageCapability.getDamage()*2));
+
+        SculkDamageCapability damageCapability =
+                //? if neoforge {
+                /*instance.getData(CorrosiveSculk.SCULK_DAMAGE_ATTACHMENT);
+                *///?} elif forge {
+                instance.getCapability(SculkDamageCapability.Provider.SCULK_DAMAGE).orElse(null);
+                //?} else {
+                /*((PersistentDataAccessor) instance).corrosive_sculk$getSculkData();
+                *///?}
+        sculkHealth.set(damageCapability.getDamage()*2);
         return original.call(instance) - sculkHealth.get();
     }
 
@@ -60,27 +63,25 @@ public class MixinLivingEntity
     @Unique private SculkDamageCapability corrosive_sculk$data;
 
     @Override
-    public Optional<SculkDamageCapability> corrosive_sculk$getSculkData() {
+    public SculkDamageCapability corrosive_sculk$getSculkData() {
         if(this.corrosive_sculk$data == null) {
             this.corrosive_sculk$data = new SculkDamageCapability();
         }
 
-        return Optional.of(corrosive_sculk$data);
+        return corrosive_sculk$data;
     }
 
-    @SuppressWarnings("OptionalGetWithoutIsPresent")
     @Inject(method = "readAdditionalSaveData", at = @At("HEAD"))
     private void corrosive_sculk$readSculkData(CompoundTag tag, CallbackInfo ci) {
         if (tag.contains(CorrosiveSculk.MODID, Tag.TAG_COMPOUND)) {
-            corrosive_sculk$getSculkData().get().loadNBTData(tag.getCompound(CorrosiveSculk.MODID));
+            corrosive_sculk$getSculkData().loadNBTData(tag.getCompound(CorrosiveSculk.MODID));
         }
     }
 
     @Inject(method = "addAdditionalSaveData", at = @At("HEAD"))
     private void corrosive_sculk$writeSculkData(CompoundTag tag, CallbackInfo ci) {
         if(corrosive_sculk$data != null) {
-            CompoundTag data = new CompoundTag();
-            corrosive_sculk$data.saveNBTData(data);
+            CompoundTag data = corrosive_sculk$data.saveNBTData();
             tag.put(CorrosiveSculk.MODID, data);
         }
     }
