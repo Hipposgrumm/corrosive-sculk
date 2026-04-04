@@ -6,6 +6,7 @@ import dev.hipposgrumm.corrosive_sculk.config.Config;
 import dev.hipposgrumm.corrosive_sculk.network.SculkDamageSoundPacket;
 import dev.hipposgrumm.corrosive_sculk.network.SculkDamageSyncPacket;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
@@ -21,6 +22,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.HorseArmorItem;
 //?}
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LightLayer;
@@ -231,8 +233,17 @@ public class SculkDamaging {
 
     public static int getDamageTime(LivingEntity entity) {
         int tolerance = 40;
+        //? if >=1.21
+        /*Holder<Enchantment> sculkTolerance = entity.registryAccess().lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(CorrosiveSculk.ENCHANTMENT_SCULK_TOLERANCE);*/
         for (ItemStack armor:entity./*? if >=1.20.5 {*//*getArmorAndBodyArmorSlots*//*?} else {*/getArmorSlots/*?}*/()) {
-            int level = EnchantmentHelper.getItemEnchantmentLevel(CorrosiveSculk.ENCHANTMENT_SCULK_TOLERANCE.get(), armor);
+            int level = EnchantmentHelper.getItemEnchantmentLevel(
+                    //? if >=1.21 {
+                    /*sculkTolerance,
+                    *///?} else {
+                    CorrosiveSculk.ENCHANTMENT_SCULK_TOLERANCE.get(),
+                    //?}
+                    armor
+            );
             if (armor.getItem() instanceof /*? if >=1.20.5 {*//*AnimalArmorItem*//*?} else {*/HorseArmorItem/*?}*/) {
                 tolerance += level*10;
             } else {

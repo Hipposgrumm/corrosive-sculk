@@ -18,7 +18,7 @@ public class HelperMethodsForMixins {
         for (int t=0;t<types.length;t++) for (int s=0;s<states.length;s++) for (int m=0;m<mods.length;m++) {
             SPRITES[(t<<4)+(s<<2)+m] =
                     //$ resourcelocation
-                    new ResourceLocation
+                    ResourceLocation.fromNamespaceAndPath
                             (CorrosiveSculk.MODID, String.format("%s%s%s", types[t], states[s], mods[m]));
         }
     }

@@ -1,5 +1,6 @@
 package dev.hipposgrumm.corrosive_sculk.enchantment;
 
+//? if <1.21 {
 import dev.hipposgrumm.corrosive_sculk.CorrosiveSculk;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
@@ -61,3 +62,4 @@ public class SculkToleranceEnchantment extends Enchantment {
     }
     //?}
 }
+//?}

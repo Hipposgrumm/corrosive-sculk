@@ -8,6 +8,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.hipposgrumm.corrosive_sculk.CorrosiveSculk;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
@@ -45,7 +46,14 @@ public class LootModifierAddSculkToleranceItem extends LootModifier {
             else if (random >= 2) level = 2;
             else level = 1;
             ItemStack item = new ItemStack(this.item);
-            item.enchant(CorrosiveSculk.ENCHANTMENT_SCULK_TOLERANCE.get(), level);
+            item.enchant(
+                    //? if >=1.21 {
+                    /*context.getResolver().lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(CorrosiveSculk.ENCHANTMENT_SCULK_TOLERANCE),
+                    *///?} else {
+                    CorrosiveSculk.ENCHANTMENT_SCULK_TOLERANCE.get(),
+                    //?}
+                    level
+            );
             generatedLoot.add(item);
         }
         return generatedLoot;

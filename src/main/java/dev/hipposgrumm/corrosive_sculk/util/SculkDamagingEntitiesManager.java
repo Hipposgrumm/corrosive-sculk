@@ -33,7 +33,10 @@ public class SculkDamagingEntitiesManager extends SimplePreparableReloadListener
     private Map<ResourceLocation,Integer> SCULK_DAMAGING_ENTITIES = ImmutableMap.of();
 
     //? if fabric {
-    /*private static final ResourceLocation ID = new ResourceLocation(CorrosiveSculk.MODID, "sculk_damaging_entities");
+    /*private static final ResourceLocation ID =
+            //$ resourcelocation
+            ResourceLocation.fromNamespaceAndPath
+                    (CorrosiveSculk.MODID, "sculk_damaging_entities");
     @Override public ResourceLocation getFabricId() {
         return ID;
     }

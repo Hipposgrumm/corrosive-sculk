@@ -41,6 +41,7 @@ public class MixinLivingEntity
                 /*((PersistentDataAccessor) instance).corrosive_sculk$getSculkData();
                 *///?}
         sculkHealth.set(damageCapability.getDamage()*2);
+        //noinspection MixinExtrasOperationParameters      // on fabric it sees the cast above and panics, specifically when the cast above is for `instance`
         return original.call(instance) - sculkHealth.get();
     }
 

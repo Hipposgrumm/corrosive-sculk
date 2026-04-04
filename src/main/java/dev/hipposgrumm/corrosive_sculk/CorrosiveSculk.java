@@ -3,6 +3,7 @@ package dev.hipposgrumm.corrosive_sculk;
 import dev.hipposgrumm.corrosive_sculk.block.MultifaceDoNothingBlock;
 import dev.hipposgrumm.corrosive_sculk.capability.SculkDamageCapability;
 import dev.hipposgrumm.corrosive_sculk.config.Config;
+//? if <1.21
 import dev.hipposgrumm.corrosive_sculk.enchantment.SculkToleranceEnchantment;
 import dev.hipposgrumm.corrosive_sculk.network.SculkDamageSyncPacket;
 import dev.hipposgrumm.corrosive_sculk.util.*;
@@ -53,7 +54,11 @@ import dev.hipposgrumm.corrosive_sculk.loot.LootModifierAddSculkToleranceItem;
     import net.neoforged.neoforge.event.AddReloadListenerEvent;
     import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
     import net.neoforged.neoforge.event.brewing.RegisterBrewingRecipesEvent;
-    import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
+    //? if >=1.21 {
+    import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
+    //?} else {
+    /^import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
+    ^///?}
     import net.neoforged.neoforge.event.entity.living.LivingUseTotemEvent;
     import net.neoforged.neoforge.event.entity.player.PlayerEvent;
     import net.neoforged.neoforge.event.tick.LevelTickEvent;
@@ -84,7 +89,6 @@ import dev.hipposgrumm.corrosive_sculk.loot.LootModifierAddSculkToleranceItem;
 /*import dev.hipposgrumm.corrosive_sculk.loot.LootModifiers;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.fabric.api.loot.v2.LootTableEvents;
@@ -115,6 +119,7 @@ public class CorrosiveSculk
     private static final DeferredRegister<Item> ITEMS = DeferredRegister.create(/*? if neoforge {*//*BuiltInRegistries.ITEM*//*?} else {*/ForgeRegistries.ITEMS/*?}*/, MODID);
     private static final DeferredRegister<MobEffect> POTION_EFFECTS = DeferredRegister.create(/*? if neoforge {*//*BuiltInRegistries.MOB_EFFECT*//*?} else {*/ForgeRegistries.MOB_EFFECTS/*?}*/, MODID);
     private static final DeferredRegister<Potion> POTIONS = DeferredRegister.create(/*? if neoforge {*//*BuiltInRegistries.POTION*//*?} else {*/ForgeRegistries.POTIONS/*?}*/, MODID);
+    //? if <1.21
     private static final DeferredRegister<Enchantment> ENCHANTMENTS = DeferredRegister.create(/*? if neoforge {*//*BuiltInRegistries.ENCHANTMENT*//*?} else {*/ForgeRegistries.ENCHANTMENTS/*?}*/, MODID);
     private static final DeferredRegister<SoundEvent> SOUND_EVENTS = DeferredRegister.create(/*? if neoforge {*//*BuiltInRegistries.SOUND_EVENT*//*?} else {*/ForgeRegistries.SOUND_EVENTS/*?}*/, MODID);
     private static final DeferredRegister</*? if neoforge {*//*MapCodec*//*?} else {*/Codec/*?}*/<? extends IGlobalLootModifier>> LOOT_MODIFIERS = DeferredRegister.create(/*? if neoforge {*//*NeoForgeRegistries.GLOBAL_LOOT_MODIFIER_SERIALIZERS*//*?} else {*/ForgeRegistries.Keys.GLOBAL_LOOT_MODIFIER_SERIALIZERS/*?}*/, MODID);
@@ -134,13 +139,21 @@ public class CorrosiveSculk
     public static final Supplier</*? if >1.20.1 {*//*Holder<Potion>*//*?} else {*/Potion/*?}*/> STRONG_SCULK_RESISTANCE_POTION = createPotion("strong_sculk_resistance", () -> new Potion(new MobEffectInstance(SCULK_RESISTANCE.get(), 9600, 1)));
     public static final Supplier</*? if >1.20.1 {*//*Holder<Potion>*//*?} else {*/Potion/*?}*/> STRONGER_SCULK_RESISTANCE_POTION = createPotion("stronger_sculk_resistance", () -> new Potion(new MobEffectInstance(SCULK_RESISTANCE.get(), 9600, 2)));
 
-    //? if >=1.20.5 {
-    /*public static final TagKey<Item> SCULK_TOLERANCE_ENCHANTABLE = TagKey.create(Registries.ITEM,
+    //? if >=1.21 {
+    /*public static final ResourceKey<Enchantment> ENCHANTMENT_SCULK_TOLERANCE = ResourceKey.create(Registries.ENCHANTMENT,
             //$ resourcelocation
-            new ResourceLocation
-                    (MODID, "sculk_tolerance_enchantable"));
-    *///?}
+            ResourceLocation.fromNamespaceAndPath
+                    (MODID, "sculk_tolerance")
+    );
+    *///?} else {
+        //? if >=1.20.5 {
+        /*public static final TagKey<Item> SCULK_TOLERANCE_ENCHANTABLE = TagKey.create(Registries.ITEM,
+                //$ resourcelocation
+                ResourceLocation.fromNamespaceAndPath
+                        (MODID, "sculk_tolerance_enchantable"));
+        *///?}
     public static final Supplier<SculkToleranceEnchantment> ENCHANTMENT_SCULK_TOLERANCE = createEnchantment("sculk_tolerance", SculkToleranceEnchantment::new);
+    //?}
 
     public static final Supplier<SoundEvent> HEART_SCULK = createSoundEvent("player.heart_sculk", id -> SoundEvent.createFixedRangeEvent(id, 2.0F));
     public static final Supplier<SoundEvent> HEART_SCULK_RETURN = createSoundEvent("player.heart_sculk_return", id -> SoundEvent.createFixedRangeEvent(id, 2.0F));
@@ -179,7 +192,7 @@ public class CorrosiveSculk
 
         //? if neoforge {
         /*IEventBus forgeBus = NeoForge.EVENT_BUS;
-        *///?} else {
+        *///?} elif forge {
         IEventBus modBus = context.getModEventBus();
         IEventBus forgeBus = MinecraftForge.EVENT_BUS;
         //?}
@@ -189,6 +202,7 @@ public class CorrosiveSculk
         ITEMS.register(modBus);
         POTION_EFFECTS.register(modBus);
         POTIONS.register(modBus);
+        //? if <1.21
         ENCHANTMENTS.register(modBus);
         SOUND_EVENTS.register(modBus);
         LOOT_MODIFIERS.register(modBus);
@@ -251,7 +265,7 @@ public class CorrosiveSculk
         //?} else {
         /*T b = Registry.register(BuiltInRegistries.BLOCK,
                 //$ resourcelocation
-                new ResourceLocation
+                ResourceLocation.fromNamespaceAndPath
                         (MODID, id), block.get());
         Supplier<T> bs = () -> b;
         REGISTERED_ENTRIES.add(bs);
@@ -265,7 +279,7 @@ public class CorrosiveSculk
         //?} else {
         /*T i = Registry.register(BuiltInRegistries.ITEM,
                 //$ resourcelocation
-                new ResourceLocation
+                ResourceLocation.fromNamespaceAndPath
                         (MODID, id), item.get());
         Supplier<T> is = () -> i;
         REGISTERED_ENTRIES.add(is);
@@ -288,7 +302,7 @@ public class CorrosiveSculk
                 ^///?}
                         (BuiltInRegistries.MOB_EFFECT,
                 //$ resourcelocation
-                new ResourceLocation
+                ResourceLocation.fromNamespaceAndPath
                         (MODID, id), effect.get());
         Supplier</^? if >1.20.1 {^/Holder<T>/^?} else {^//^T^//^?}^/> es = () -> e;
         REGISTERED_ENTRIES.add(es);
@@ -311,7 +325,7 @@ public class CorrosiveSculk
                 ^///?}
                         (BuiltInRegistries.POTION,
                 //$ resourcelocation
-                new ResourceLocation
+                ResourceLocation.fromNamespaceAndPath
                         (MODID, id), potion.get());
         Supplier</^? if >1.20.1 {^/Holder<T>/^?} else {^//^T^//^?}^/> ps = () -> p;
         REGISTERED_ENTRIES.add(ps);
@@ -319,19 +333,21 @@ public class CorrosiveSculk
         *///?}
     }
 
+    //? if <1.21 {
     private static <T extends Enchantment> Supplier<T> createEnchantment(String id, Supplier<T> enchantment) {
         //? if forgebase {
         return ENCHANTMENTS.register(id,enchantment);
         //?} else {
         /*T e = Registry.register(BuiltInRegistries.ENCHANTMENT,
                 //$ resourcelocation
-                new ResourceLocation
+                ResourceLocation.fromNamespaceAndPath
                         (MODID, id), enchantment.get());
         Supplier<T> es = () -> e;
         REGISTERED_ENTRIES.add(es);
         return es;
         *///?}
     }
+    //?}
 
     private static <T extends SoundEvent> Supplier<T> createSoundEvent(String id, Function<ResourceLocation, T> sound) {
         ResourceLocation location =
@@ -373,7 +389,7 @@ public class CorrosiveSculk
             event.accept(WOVEN_SCULK_ITEM.get());
             event.accept(WOVEN_SCULK_VEIN_ITEM.get());
         }
-            //? if >=1.20.5 {
+            //? if >=1.20.5 && <1.21 {
             /*else if (event.getTabKey() == CreativeModeTabs.INGREDIENTS) {
                 int max = CorrosiveSculk.ENCHANTMENT_SCULK_TOLERANCE.get().getMaxLevel();
                 for (int i=1;i<=max;i++)
@@ -387,15 +403,15 @@ public class CorrosiveSculk
                     tab.accept(WOVEN_SCULK_ITEM.get());
                     tab.accept(WOVEN_SCULK_VEIN_ITEM.get());
                 });
-            //? if >=1.20.5 {
-            ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.INGREDIENTS)
+            //? if >=1.20.5 && <1.21 {
+            /^ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.INGREDIENTS)
                     .register((tab) -> {
                         int max = CorrosiveSculk.ENCHANTMENT_SCULK_TOLERANCE.get().getMaxLevel();
                         for (int i=1;i<=max;i++)
                             tab.accept(EnchantedBookItem.createForEnchantment(new EnchantmentInstance(CorrosiveSculk.ENCHANTMENT_SCULK_TOLERANCE.get(), i)), CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
                         tab.accept(EnchantedBookItem.createForEnchantment(new EnchantmentInstance(CorrosiveSculk.ENCHANTMENT_SCULK_TOLERANCE.get(), max)), CreativeModeTab.TabVisibility.PARENT_TAB_ONLY);
                     });
-            //?}
+            ^///?}
         *///?}
     }
 
@@ -430,7 +446,7 @@ public class CorrosiveSculk
             /*ServerGamePacketListenerImpl handler, PacketSender sender, MinecraftServer server
             *///?}
     ) {
-        //? if forgebase {
+        //? if forgebase
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
         //? if fabric
         /*ServerPlayer player = handler.getPlayer();*/
@@ -556,11 +572,11 @@ public class CorrosiveSculk
     }
 
     /*? if forgebase {*/private/*?} else {*//*public*//*?}*/ static void onEntityDamaged(
-        //? if fabric {
+            //? if fabric {
             /*float damage, DamageSource source, LivingEntity entity) {
         *///?} else {
-            LivingHurtEvent event) {
-        float damage = event.getAmount();
+            /*? if >=1.21 {*//*LivingDamageEvent.Pre*//*?} else {*/LivingHurtEvent/*?}*/ event) {
+        float damage = event./*? if >=1.21 {*//*getNewDamage*//*?} else {*/getAmount/*?}*/();
         DamageSource source = event.getSource();
         LivingEntity entity = event.getEntity();
         //?}
@@ -571,8 +587,17 @@ public class CorrosiveSculk
             if (sculk<=0) return;
             int div = 4;
             float prot = 0;
+            //? if >=1.21
+            /*Holder<Enchantment> sculkTolerance = entity.registryAccess().lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(ENCHANTMENT_SCULK_TOLERANCE);*/
             for (ItemStack armor:entity./*? if >=1.20.5 {*//*getArmorAndBodyArmorSlots*//*?} else {*/getArmorSlots/*?}*/()) {
-                int amount = 2*EnchantmentHelper.getItemEnchantmentLevel(CorrosiveSculk.ENCHANTMENT_SCULK_TOLERANCE.get(), armor);
+                int amount = 2*EnchantmentHelper.getItemEnchantmentLevel(
+                        //? if >=1.21 {
+                        /*sculkTolerance,
+                        *///?} else {
+                        CorrosiveSculk.ENCHANTMENT_SCULK_TOLERANCE.get(),
+                        //?}
+                        armor
+                );
                 if (armor.getItem() instanceof /*? if >=1.20.5 {*//*AnimalArmorItem*//*?} else {*/HorseArmorItem/*?}*/) {
                     prot = amount;
                     div = 1;

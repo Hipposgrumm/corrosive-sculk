@@ -2,6 +2,7 @@ package dev.hipposgrumm.corrosive_sculk.loot;
 
 //? if fabric {
 /*import dev.hipposgrumm.corrosive_sculk.CorrosiveSculk;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -61,7 +62,14 @@ public class LootModifiers {
             else if (random >= 2) level = 2;
             else level = 1;
             ItemStack item = new ItemStack(this.item);
-            item.enchant(CorrosiveSculk.ENCHANTMENT_SCULK_TOLERANCE.get(), level);
+            item.enchant(
+                    //? if >=1.21 {
+                    ctx.getResolver().lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(CorrosiveSculk.ENCHANTMENT_SCULK_TOLERANCE),
+                    //?} else {
+                    /^CorrosiveSculk.ENCHANTMENT_SCULK_TOLERANCE.get(),
+                    ^///?}
+                    level
+            );
             out.accept(item);
         }
 

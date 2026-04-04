@@ -56,8 +56,9 @@ stonecutter {
     stonecutter.const("neoforge", platform == "neoforge")
     stonecutter.const("forgebase", platform.contains("forge"))
     stonecutter.swap("resourcelocation",
-            (platform == "forge") ? "ResourceLocation.fromNamespaceAndPath"
-            : "new ResourceLocation"
+            (platform == "forge" || stonecutter.eval(mc_version, ">=1.21"))
+                    ? "ResourceLocation.fromNamespaceAndPath"
+                    : "new ResourceLocation"
     )
 }
 
@@ -117,16 +118,10 @@ dependencies {
 
         modApi "me.shedaniel.cloth:cloth-config-neoforge:${project.cloth_version}"
 
-        if (stonecutter.eval(mc_version, "<1.21")) {
+        if (stonecutter.eval(mc_version, "<1.21.4")) {
             // Need @Expresssion Annotation
             implementation(include("io.github.llamalad7:mixinextras-neoforge:0.5.0"))
         }
-    }
-	
-	if (stonecutter.eval(mc_version, "=1.20.1")) {
-        // stonecutter.excludeFiles() implementation below; I want it to be findable on github
-        stonecutter.exclude("src/main/resources/data/c/tags/items/armors")
-        stonecutter.exclude("src/main/resources/data/corrosive_sculk/tags/items/sculk_tolerance_enchantable.json")
     }
 }
 
@@ -163,6 +158,28 @@ processResources {
             cloth_version: project.cloth_version,
             modmenu_version: project.modmenu_version
     ]
+
+    exclude("**/.gitkeep")
+    if (platform != "forge") exclude("data/forge")
+    if (platform != "neoforge") exclude("data/neoforge")
+    if (stonecutter.eval(mc_version, ">=1.21")) {
+        exclude("data/c/tags/items/**")
+        exclude("data/corrosive_sculk/tags/blocks/**")
+        exclude("data/corrosive_sculk/tags/entity_types/**")
+        exclude("data/corrosive_sculk/tags/items/**")
+    } else {
+        exclude("data/c/tags/item/**")
+        exclude("data/corrosive_sculk/tags/block/**")
+        exclude("data/corrosive_sculk/tags/entity_type/**")
+        exclude("data/corrosive_sculk/tags/item/**")
+
+        exclude("data/corrosive_sculk/enchantment/**")
+        exclude("data/minecraft/tags/enchantment/**")
+        if (stonecutter.eval(mc_version, "=1.20.1")) {
+            exclude("data/c/tags/items/armors/**")
+            exclude("data/corrosive_sculk/tags/items/sculk_tolerance_enchantable.json")
+        }
+    }
 
     filesMatching("fabric.mod.json") { expand replacements }
     filesMatching("META-INF/mods.toml") { expand replacements }

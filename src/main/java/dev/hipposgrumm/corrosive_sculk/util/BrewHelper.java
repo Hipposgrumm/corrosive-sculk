@@ -23,7 +23,7 @@ public class BrewHelper {
     public static void createRecipes(
             //? if >=1.20.5 {
             /*//? if forgebase
-            /^RegisterBrewingRecipesEvent event,^/
+            RegisterBrewingRecipesEvent event,
             Holder<Potion> base, Item ingredient, Holder<Potion> result
             *///?} else {
             Potion base, Item ingredient, Potion result
