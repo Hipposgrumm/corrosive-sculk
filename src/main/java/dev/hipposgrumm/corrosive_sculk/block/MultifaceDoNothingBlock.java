@@ -20,11 +20,14 @@ import net.minecraft.world.level.material.Fluids;
 import java.util.Optional;
 
 public class MultifaceDoNothingBlock extends MultifaceBlock implements SimpleWaterloggedBlock {
+    //? if <1.21.2 {
     private static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     private final MultifaceSpreader spreader = new DoNothingSpreader();
+    //?}
 
     public MultifaceDoNothingBlock(BlockBehaviour.Properties properties) {
         super(properties);
+        //? if <1.21.2
         this.registerDefaultState(this.defaultBlockState().setValue(WATERLOGGED, false));
     }
 
@@ -35,6 +38,7 @@ public class MultifaceDoNothingBlock extends MultifaceBlock implements SimpleWat
     }
     *///?}
 
+    //? if <1.21.2 {
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> arg) {
         super.createBlockStateDefinition(arg.add(WATERLOGGED));
     }
@@ -47,14 +51,14 @@ public class MultifaceDoNothingBlock extends MultifaceBlock implements SimpleWat
         return super.updateShape(state, direction, otherState, level, pos, otherPos);
     }
 
+    public FluidState getFluidState(BlockState arg) {
+        return arg.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(arg);
+    }
+
     public boolean canBeReplaced(BlockState state, BlockPlaceContext context) {
         return context.getItemInHand().getItem() instanceof BlockItem block
                 && block.getBlock() == this
                 && super.canBeReplaced(state, context);
-    }
-
-    public FluidState getFluidState(BlockState arg) {
-        return arg.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(arg);
     }
 
     public MultifaceSpreader getSpreader() {
@@ -101,4 +105,5 @@ public class MultifaceDoNothingBlock extends MultifaceBlock implements SimpleWat
             return Optional.empty();
         }
     }
+    //?}
 }

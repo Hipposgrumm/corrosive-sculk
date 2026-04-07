@@ -98,7 +98,9 @@ public class Config {
         /*if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT)
         *///?}
             ;//contents += writeOption(OPTION_NAMES[0], vals[0], get.apply("gui.corrosive_sculk.config.option.sculk_warn_sound.desc"));
-        contents += """
+        contents += "# "+get.apply("gui.corrosive_sculk.config.autogenmsg")+"""
+        
+        
         ["Assist Mode"]
         # Options that may make the mod easier or not as punishing.
         

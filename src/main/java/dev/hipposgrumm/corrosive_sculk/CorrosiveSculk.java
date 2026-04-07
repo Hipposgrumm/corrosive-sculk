@@ -51,14 +51,18 @@ import dev.hipposgrumm.corrosive_sculk.loot.LootModifierAddSculkToleranceItem;
     import net.neoforged.neoforge.attachment.AttachmentType;
     import net.neoforged.neoforge.common.NeoForge;
     import net.neoforged.neoforge.common.loot.IGlobalLootModifier;
-    import net.neoforged.neoforge.event.AddReloadListenerEvent;
+    //? if >=1.21.4 {
+    import net.neoforged.neoforge.event.AddServerReloadListenersEvent;
+    //?} else {
+    /^import net.neoforged.neoforge.event.AddReloadListenerEvent;
+    ^///?}
     import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
     import net.neoforged.neoforge.event.brewing.RegisterBrewingRecipesEvent;
-    //? if >=1.21 {
-    import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
-    //?} else {
-    /^import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
-    ^///?}
+        //? if >=1.21 {
+        import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
+        //?} else {
+        /^import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
+        ^///?}
     import net.neoforged.neoforge.event.entity.living.LivingUseTotemEvent;
     import net.neoforged.neoforge.event.entity.player.PlayerEvent;
     import net.neoforged.neoforge.event.tick.LevelTickEvent;
@@ -97,6 +101,7 @@ import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 *///?}
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -129,15 +134,15 @@ public class CorrosiveSculk
     /*private static final List<Supplier<?>> REGISTERED_ENTRIES = new ArrayList<>();
     *///?}
 
-    public static final Supplier<Block> WOVEN_SCULK = createBlock("woven_sculk", () -> new Block(Block.Properties./*? if >=1.20.3 {*//*ofFullCopy*//*?} else {*/copy/*?}*/(Blocks.SCULK).sound(SoundType.WOOL)));
-    public static final Supplier<Block> WOVEN_SCULK_VEIN = createBlock("woven_sculk_vein", () -> new MultifaceDoNothingBlock(Block.Properties./*? if >=1.20.3 {*//*ofFullCopy*//*?} else {*/copy/*?}*/(Blocks.SCULK_VEIN).sound(SoundType.WOOL)));
-    public static final Supplier<BlockItem> WOVEN_SCULK_ITEM = createItem("woven_sculk", () -> new BlockItem(WOVEN_SCULK.get(), new Item.Properties()));
-    public static final Supplier<BlockItem> WOVEN_SCULK_VEIN_ITEM = createItem("woven_sculk_vein", () -> new BlockItem(WOVEN_SCULK_VEIN.get(), new Item.Properties()));
+    public static final Supplier<Block> WOVEN_SCULK = createBlock("woven_sculk", Block::new, Block.Properties./*? if >=1.20.3 {*//*ofFullCopy*//*?} else {*/copy/*?}*/(Blocks.SCULK).sound(SoundType.WOOL));
+    public static final Supplier<Block> WOVEN_SCULK_VEIN = createBlock("woven_sculk_vein", MultifaceDoNothingBlock::new, Block.Properties./*? if >=1.20.3 {*//*ofFullCopy*//*?} else {*/copy/*?}*/(Blocks.SCULK_VEIN).sound(SoundType.WOOL));
+    public static final Supplier<BlockItem> WOVEN_SCULK_ITEM = createItem("woven_sculk", props -> new BlockItem(WOVEN_SCULK.get(), props) ,new Item.Properties());
+    public static final Supplier<BlockItem> WOVEN_SCULK_VEIN_ITEM = createItem("woven_sculk_vein", props -> new BlockItem(WOVEN_SCULK_VEIN.get(), props) ,new Item.Properties());
 
     public static final Supplier</*? if >1.20.1 {*//*Holder<MobEffect>*//*?} else {*/MobEffect/*?}*/> SCULK_RESISTANCE = createMobEffect("sculk_resistance", () -> new MobEffect(MobEffectCategory.BENEFICIAL, 0x063E44) {});
-    public static final Supplier</*? if >1.20.1 {*//*Holder<Potion>*//*?} else {*/Potion/*?}*/> SCULK_RESISTANCE_POTION = createPotion("sculk_resistance", () -> new Potion(new MobEffectInstance(SCULK_RESISTANCE.get(), 9600)));
-    public static final Supplier</*? if >1.20.1 {*//*Holder<Potion>*//*?} else {*/Potion/*?}*/> STRONG_SCULK_RESISTANCE_POTION = createPotion("strong_sculk_resistance", () -> new Potion(new MobEffectInstance(SCULK_RESISTANCE.get(), 9600, 1)));
-    public static final Supplier</*? if >1.20.1 {*//*Holder<Potion>*//*?} else {*/Potion/*?}*/> STRONGER_SCULK_RESISTANCE_POTION = createPotion("stronger_sculk_resistance", () -> new Potion(new MobEffectInstance(SCULK_RESISTANCE.get(), 9600, 2)));
+    public static final Supplier</*? if >1.20.1 {*//*Holder<Potion>*//*?} else {*/Potion/*?}*/> SCULK_RESISTANCE_POTION = createPotion("sculk_resistance", name -> new Potion(name, new MobEffectInstance(SCULK_RESISTANCE.get(), 9600)));
+    public static final Supplier</*? if >1.20.1 {*//*Holder<Potion>*//*?} else {*/Potion/*?}*/> STRONG_SCULK_RESISTANCE_POTION = createPotion("strong_sculk_resistance", name -> new Potion(name, new MobEffectInstance(SCULK_RESISTANCE.get(), 9600, 1)));
+    public static final Supplier</*? if >1.20.1 {*//*Holder<Potion>*//*?} else {*/Potion/*?}*/> STRONGER_SCULK_RESISTANCE_POTION = createPotion("stronger_sculk_resistance", name -> new Potion(name, new MobEffectInstance(SCULK_RESISTANCE.get(), 9600, 2)));
 
     //? if >=1.21 {
     /*public static final ResourceKey<Enchantment> ENCHANTMENT_SCULK_TOLERANCE = ResourceKey.create(Registries.ENCHANTMENT,
@@ -259,28 +264,30 @@ public class CorrosiveSculk
         *///?}
     }
 
-    private static <T extends Block> Supplier<T> createBlock(String id, Supplier<T> block) {
-        //? if forgebase {
-        return BLOCKS.register(id,block);
-        //?} else {
-        /*T b = Registry.register(BuiltInRegistries.BLOCK,
+    private static <T extends Block> Supplier<T> createBlock(String id, Function<BlockBehaviour.Properties, T> block, BlockBehaviour.Properties props) {
+        ResourceLocation location =
                 //$ resourcelocation
                 ResourceLocation.fromNamespaceAndPath
-                        (MODID, id), block.get());
+                        (MODID, id);
+        //? if forgebase {
+        return BLOCKS.register(id,() -> block.apply(props/*? if >=1.21.2 {*//*.setId(ResourceKey.create(Registries.BLOCK, location))*//*?}*/));
+        //?} else {
+        /*T b = Registry.register(BuiltInRegistries.BLOCK, location, block.apply(props/^? if >=1.21.2 {^/.setId(ResourceKey.create(Registries.BLOCK, location))/^?}^/));
         Supplier<T> bs = () -> b;
         REGISTERED_ENTRIES.add(bs);
         return bs;
         *///?}
     }
 
-    private static <T extends Item> Supplier<T> createItem(String id, Supplier<T> item) {
-        //? if forgebase {
-        return ITEMS.register(id,item);
-        //?} else {
-        /*T i = Registry.register(BuiltInRegistries.ITEM,
+    private static <T extends Item> Supplier<T> createItem(String id, Function<Item.Properties, T> item, Item.Properties props) {
+        ResourceLocation location =
                 //$ resourcelocation
                 ResourceLocation.fromNamespaceAndPath
-                        (MODID, id), item.get());
+                        (MODID, id);
+        //? if forgebase {
+        return ITEMS.register(id,() -> item.apply(props/*? if >=1.21.2 {*//*.setId(ResourceKey.create(Registries.ITEM, location))*//*?}*/));
+        //?} else {
+        /*T i = Registry.register(BuiltInRegistries.ITEM, location, item.apply(props/^? if >=1.21.2 {^/.setId(ResourceKey.create(Registries.ITEM, location))/^?}^/));
         Supplier<T> is = () -> i;
         REGISTERED_ENTRIES.add(is);
         return is;
@@ -311,11 +318,11 @@ public class CorrosiveSculk
     }
 
     @SuppressWarnings("unchecked")
-    private static <T extends Potion> Supplier</*? if >1.20.1 {*//*Holder<T>*//*?} else {*/T/*?}*/> createPotion(String id, Supplier<T> potion) {
+    private static <T extends Potion> Supplier</*? if >1.20.1 {*//*Holder<T>*//*?} else {*/T/*?}*/> createPotion(String id, Function<String, T> potion) {
         //? if forgebase {
             //? if >1.20.1
-            /*Holder<T> p = (Holder<T>) POTIONS.register(id,potion);*/
-        return /*? if >1.20.1 {*//*p::getDelegate*//*?} else {*/POTIONS.register(id,potion)/*?}*/;
+            /*Holder<T> p = (Holder<T>) POTIONS.register(id,() -> potion.apply(id));*/
+        return /*? if >1.20.1 {*//*p::getDelegate*//*?} else {*/POTIONS.register(id,() -> potion.apply(id))/*?}*/;
         //?} else {
         /*/^? if >1.20.1 {^/Holder<T>/^?} else {^//^T^//^?}^/ p = /^? if >1.20.1 {^/(Holder<T>)/^?}^/ Registry.
                 //? if >1.20.1 {
@@ -326,7 +333,7 @@ public class CorrosiveSculk
                         (BuiltInRegistries.POTION,
                 //$ resourcelocation
                 ResourceLocation.fromNamespaceAndPath
-                        (MODID, id), potion.get());
+                        (MODID, id), potion.apply(id));
         Supplier</^? if >1.20.1 {^/Holder<T>/^?} else {^//^T^//^?}^/> ps = () -> p;
         REGISTERED_ENTRIES.add(ps);
         return ps;
@@ -340,7 +347,7 @@ public class CorrosiveSculk
         //?} else {
         /*T e = Registry.register(BuiltInRegistries.ENCHANTMENT,
                 //$ resourcelocation
-                ResourceLocation.fromNamespaceAndPath
+                new ResourceLocation
                         (MODID, id), enchantment.get());
         Supplier<T> es = () -> e;
         REGISTERED_ENTRIES.add(es);
@@ -415,10 +422,10 @@ public class CorrosiveSculk
         *///?}
     }
 
-    private static void registerReloadListeners(/*? if forgebase {*/AddReloadListenerEvent event/*?}*/) {
+    private static void registerReloadListeners(/*? if forgebase {*//*? if >=1.21.4 {*//*AddServerReloadListenersEvent*//*?} else {*/AddReloadListenerEvent/*?}*/ event/*?}*/) {
         SCULK_DAMAGING_ENTITIES = new SculkDamagingEntitiesManager();
         //? if forgebase {
-        event.addListener(SCULK_DAMAGING_ENTITIES);
+        event.addListener(/*? if >=1.21.4 {*//*SculkDamagingEntitiesManager.ID,*//*?}*/ SCULK_DAMAGING_ENTITIES);
         //?} else {
         /*ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(SCULK_DAMAGING_ENTITIES);
         *///?}

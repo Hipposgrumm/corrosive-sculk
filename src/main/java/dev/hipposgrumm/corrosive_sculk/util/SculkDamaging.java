@@ -99,8 +99,11 @@ public class SculkDamaging {
             return true;
         } else {
             sculkDamage.decrementDamageTimer();
-            if (sculkDamage.getDamageTimerMax() != 0)
-                sculkDamage.setWarning(100-(int) ((sculkDamage.getDamageTimer() / (float) sculkDamage.getDamageTimerMax()) * 100));
+            if (sculkDamage.getDamageTimerMax() != 0) {
+                int warn = 100-(int) ((sculkDamage.getDamageTimer() / (float) sculkDamage.getDamageTimerMax()) * 100);
+                if (!hasContact && warn > 75) warn = 75;
+                sculkDamage.setWarning(warn);
+            }
             return false;
         }
     }
@@ -201,7 +204,13 @@ public class SculkDamaging {
     }
 
     public static void doSculkDamage(int hearts, SculkDamageCapability sculkDamage, LivingEntity entity, Entity attacker) {
-        DamageSource source = new DamageSource(entity.level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(CorrosiveSculk.SCULK_DAMAGE), null, attacker);
+        DamageSource source = new DamageSource(entity.level().registryAccess().
+                //? if >=1.21.2 {
+                /*lookupOrThrow(Registries.DAMAGE_TYPE).getOrThrow
+                *///?} else {
+                registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow
+                //?}
+        (CorrosiveSculk.SCULK_DAMAGE), null, attacker);
         if (Config.sculkHealCircumstance.hasSculkDamage) {
             boolean canDamageStill = true;
             if (sculkDamage.getProtection() > 0) {

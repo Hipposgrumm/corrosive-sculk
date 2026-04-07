@@ -1,6 +1,10 @@
 {
   "block.corrosive_sculk.woven_sculk": "Woven Sculk",
   "block.corrosive_sculk.woven_sculk_vein": "Woven Sculk Vein",
+  //? if >=1.21.2 {
+  /*"item.corrosive_sculk.woven_sculk": "Woven Sculk",
+  "item.corrosive_sculk.woven_sculk_vein": "Woven Sculk Vein",
+  *///?}
   "death.attack.sculk_damage": "%1$s was consumed by Sculk",
   "death.attack.sculk_damage.player": "%1$s was consumed by Sculk whilst trying to escape %2$s",
   "death.attack.sculk_damage.item": "%1$s was consumed by Sculk whilst trying to escape %2$s using %3$s",
@@ -11,6 +15,7 @@
   "enchantment.corrosive_sculk.sculk_tolerance": "Sculk Tolerance",
   "gui.corrosive_sculk.config.title": "Corrosive Sculk Config",
   "gui.corrosive_sculk.config.absent": "Config file not found. Restart the game.",
+  "gui.corrosive_sculk.config.autogenmsg": "NOTICE: This config is regenerated when modified in-game.",
   "gui.corrosive_sculk.config.option.sculk_warn_sound": "Sculk Warning Sound",
   "gui.corrosive_sculk.config.option.sculk_warn_sound.desc": "Whether you hear a warning sound when stepping on sculk. Turn it off if it's too obnoxious.",
   "gui.corrosive_sculk.config.category.assist_mode": "Assist Mode",
@@ -33,9 +38,11 @@
   "item.minecraft.tipped_arrow.effect.sculk_resistance": "Arrow of Sculk Resistance",
   "item.minecraft.tipped_arrow.effect.strong_sculk_resistance": "Arrow of Sculk Resistance",
   "item.minecraft.tipped_arrow.effect.stronger_sculk_resistance": "Arrow of Sculk Resistance",
-  "tag.block.corrosive_sculk.sculk_blocks": "Sculk Blocks",
+  //? if >=1.21 {
+  /*"tag.block.corrosive_sculk.sculk_blocks": "Sculk Blocks",
   "tag.entity_type.corrosive_sculk.sculk_immune": "Sculk Immune",
   "tag.item.c.armors.horse": "Horse Armors",
   "tag.item.c.armors.wolf": "Wolf Armors",
-  "tag.item.corrosive_sculk.sculk_tolerance_enchantable": "Sculk Tolerance Enchantable"
+  "tag.item.corrosive_sculk.sculk_tolerance_enchantable": "Sculk Tolerance Enchantable",
+  *///?}
 }

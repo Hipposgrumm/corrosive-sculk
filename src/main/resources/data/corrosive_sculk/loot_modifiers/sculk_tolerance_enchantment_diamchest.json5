@@ -2,7 +2,11 @@
   "type": "corrosive_sculk:sculk_tolerance_enchantment",
   "conditions": [
     {
+      //? if neoforge {
+      /*"condition": "neoforge:loot_table_id",
+      *///?} else {
       "condition": "forge:loot_table_id",
+      //?}
       "loot_table_id": "minecraft:chests/ancient_city"
     }
   ],

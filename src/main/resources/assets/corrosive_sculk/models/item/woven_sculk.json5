@@ -1,0 +1,7 @@
+{
+  //? if >=1.21.4 {
+  /*"parent": "minecraft:block/sculk"
+  *///?} else {
+  "parent": "minecraft:item/sculk"
+  //?}
+}

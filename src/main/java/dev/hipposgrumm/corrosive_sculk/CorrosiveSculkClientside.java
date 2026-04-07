@@ -5,6 +5,7 @@ import dev.hipposgrumm.corrosive_sculk.network.SculkDamageSoundPacket;
 import dev.hipposgrumm.corrosive_sculk.network.SculkDamageSyncPacket;
 import dev.hipposgrumm.corrosive_sculk.util.HelperMethodsForMixins;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.sounds.SoundEvent;
@@ -30,6 +31,7 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 /*import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
     //? if >=1.20.5 {
     import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
@@ -60,7 +62,12 @@ public class CorrosiveSculkClientside
                 (event -> clientSetup(event, context))
         );
         //?} else {
-            /*//? if >=1.20.5 {
+            /*//? if >=1.21.6 {
+            /^BlockRenderLayerMap.putBlock(CorrosiveSculk.WOVEN_SCULK_VEIN.get(), RenderType.CUTOUT);
+            ^///?} else {
+            BlockRenderLayerMap.INSTANCE.putBlock(CorrosiveSculk.WOVEN_SCULK_VEIN.get(), RenderType.cutout());
+            //?}
+            //? if >=1.20.5 {
             PayloadTypeRegistry.playS2C().register(SculkDamageSyncPacket.TYPE, SculkDamageSyncPacket.CODEC);
             PayloadTypeRegistry.playS2C().register(SculkDamageSoundPacket.TYPE, SculkDamageSoundPacket.CODEC);
             //?}
@@ -105,7 +112,7 @@ public class CorrosiveSculkClientside
 
     public static void playHeartSound(SoundEvent sound, float volume) {
         Minecraft.getInstance().getSoundManager().play(
-                new SimpleSoundInstance(sound.getLocation(), SoundSource.PLAYERS, volume, 1f, SoundInstance.createUnseededRandom(), false, 0, SoundInstance.Attenuation.NONE, 0, 0, 0, true)
+                new SimpleSoundInstance(sound./*? if >=1.21.2 {*//*location*//*?} else {*/getLocation/*?}*/(), SoundSource.PLAYERS, volume, 1f, SoundInstance.createUnseededRandom(), false, 0, SoundInstance.Attenuation.NONE, 0, 0, 0, true)
         );
     }
 }

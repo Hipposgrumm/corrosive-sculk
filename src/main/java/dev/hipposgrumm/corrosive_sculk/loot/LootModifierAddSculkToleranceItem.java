@@ -39,6 +39,12 @@ public class LootModifierAddSculkToleranceItem extends LootModifier {
     @Nonnull
     @Override
     protected ObjectArrayList<ItemStack> doApply(ObjectArrayList<ItemStack> generatedLoot, LootContext context) {
+        for (LootItemCondition condition : this.conditions) {
+            if(!condition.test(context)) {
+                return generatedLoot;
+            }
+        }
+
         if (context.getRandom().nextFloat() <= this.chance) {
             int random = context.getRandom().nextInt(10);
             int level;

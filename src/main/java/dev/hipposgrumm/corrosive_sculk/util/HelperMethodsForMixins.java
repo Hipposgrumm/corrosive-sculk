@@ -4,6 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import dev.hipposgrumm.corrosive_sculk.CorrosiveSculk;
 import dev.hipposgrumm.corrosive_sculk.capability.SculkDamageCapability;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 
 public class HelperMethodsForMixins {
@@ -37,14 +38,19 @@ public class HelperMethodsForMixins {
     public static void loadStaticData() {} // Dummy function to tell Java to load the class and initialize static data.
 
     public static void drawSculkWarning(GuiGraphics guiGraphics, SculkDamageCapability.ClientData clientData, SculkHeart heart, WarnHeartData warn) {
+        //? if <1.21.2
         guiGraphics.setColor(1, 1, 1, clientData.getWarning() / 100f);
         //? if >1.20.1 {
         /*RenderSystem.enableBlend();
-        guiGraphics.blitSprite(heart.getSprite(SculkHeart.FULL), warn.x(), warn.y(), 9, 9);
+        guiGraphics.blitSprite(/^? if >=1.21.2 {^/RenderType::guiTextured,/^?}^/ heart.getSprite(SculkHeart.FULL), warn.x(), warn.y(), 9, 9
+                //? if >=1.21.2
+                , (((int) (clientData.getWarning() * 2.55f))<<24 | 0x00FFFFFF)
+        );
         RenderSystem.disableBlend();
         *///?} else {
         guiGraphics.blit(SCULK_HEARTS_TEXTURE, warn.x(), warn.y(), heart.xOffset(), 0, 9, 9, 64, 32);
         //?}
+        //? if <1.21.2
         guiGraphics.setColor(1, 1, 1, 1);
     }
 

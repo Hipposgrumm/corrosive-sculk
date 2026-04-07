@@ -15,6 +15,7 @@ import dev.hipposgrumm.corrosive_sculk.util.HelperMethodsForMixins.WarnHeartData
 import dev.hipposgrumm.corrosive_sculk.capability.SculkDamageCapability;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
@@ -24,6 +25,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import java.util.function.Function;
 
 @Mixin(Gui.class)
 public class MixinGui {
@@ -122,7 +125,7 @@ public class MixinGui {
 
         if (sculkHeart != null) {
             //? if >1.20.1 {
-            /*guiGraphics.blitSprite(sculkHeart.getSprite(heartState), x, y, 9, 9);
+            /*guiGraphics.blitSprite(/^? if >=1.21.2 {^/RenderType::guiTextured,/^?}^/ sculkHeart.getSprite(heartState), x, y, 9, 9);
             *///?} else {
             guiGraphics.blit(HelperMethodsForMixins.SCULK_HEARTS_TEXTURE, x, y, sculkHeart.xOffset(), heartState*9, 9, 9, 64, 32);
             //?}
@@ -187,19 +190,21 @@ public class MixinGui {
 
     @WrapOperation(remap = false, method = "renderVehicleHealth", at = @At(
             remap = true, value = "INVOKE", target =
-            //? if >1.20.1 {
+            //? if >=1.21.2 {
+            /*"Lnet/minecraft/client/gui/GuiGraphics;blitSprite(Ljava/util/function/Function;Lnet/minecraft/resources/ResourceLocation;IIII)V"
+            *///?} elif >1.20.1 {
             /*"Lnet/minecraft/client/gui/GuiGraphics;blitSprite(Lnet/minecraft/resources/ResourceLocation;IIII)V"
             *///?} else {
             "Lnet/minecraft/client/gui/GuiGraphics;blit(Lnet/minecraft/resources/ResourceLocation;IIIIII)V"
             //?}
     ))
-    private void corrosive_sculk$changeHorseHearts(GuiGraphics instance, ResourceLocation texture_location, int x, int y, /*? if <=1.20.1 {*/int textureX, int textureY,/*?}*/ int width, int height, Operation<Void> original,
-                                                            @Local(ordinal = 5) int row,
-                                                            @Local(ordinal = 7) int currentHeart,
-                                                            @Share("lastDrawnHeart") LocalIntRef lastDrawnHeart,
-                                                            @Share("totalHearts") LocalIntRef totalHearts,
-                                                            @Share("clientData") LocalRef<SculkDamageCapability.ClientData> clientDataRef,
-                                                            @Share("warnedHeart") LocalRef<WarnHeartData> warnedHeartRef) {
+    private void corrosive_sculk$changeHorseHearts(GuiGraphics instance, /*? if >=1.21.2 {*//*Function<ResourceLocation, RenderType> renderFunc,*//*?}*/ ResourceLocation texture_location, int x, int y, /*? if <=1.20.1 {*/int textureX, int textureY,/*?}*/ int width, int height, Operation<Void> original,
+                                                   @Local(ordinal = 5) int row,
+                                                   @Local(ordinal = 7) int currentHeart,
+                                                   @Share("lastDrawnHeart") LocalIntRef lastDrawnHeart,
+                                                   @Share("totalHearts") LocalIntRef totalHearts,
+                                                   @Share("clientData") LocalRef<SculkDamageCapability.ClientData> clientDataRef,
+                                                   @Share("warnedHeart") LocalRef<WarnHeartData> warnedHeartRef) {
         // This can initialize most important things, namely things that need to be initialized immediately.
         SculkDamageCapability.ClientData clientData = clientDataRef.get();
 
@@ -223,13 +228,13 @@ public class MixinGui {
 
         if (sculkHeart != null) {
             //? if >1.20.1 {
-            /*instance.blitSprite(sculkHeart.getSprite(heartState), x, y, 9, 9);
+            /*instance.blitSprite(/^? if >=1.21.2 {^/RenderType::guiTextured,/^?}^/ sculkHeart.getSprite(heartState), x, y, 9, 9);
             *///?} else {
             instance.blit(HelperMethodsForMixins.SCULK_HEARTS_TEXTURE, x, y, sculkHeart.xOffset(), heartState*9, 9, 9, 64, 32);
             //?}
             lastDrawnHeart.set(currentHeart); // Don't run through drawing this heart again, if it's a sculk heart.
         } else {
-            original.call(instance, texture_location, x, y, /*? if <=1.20.1 {*/textureX, textureY,/*?}*/ width, height);
+            original.call(instance, /*? if >=1.21.2 {*//*renderFunc,*//*?}*/ texture_location, x, y, /*? if <=1.20.1 {*/textureX, textureY,/*?}*/ width, height);
             warnHeart = true;
         }
 

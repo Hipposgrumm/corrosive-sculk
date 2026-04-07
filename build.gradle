@@ -118,7 +118,7 @@ dependencies {
 
         modApi "me.shedaniel.cloth:cloth-config-neoforge:${project.cloth_version}"
 
-        if (stonecutter.eval(mc_version, "<1.21.4")) {
+        if (stonecutter.eval(mc_version, "<1.21.11")) {
             // Need @Expresssion Annotation
             implementation(include("io.github.llamalad7:mixinextras-neoforge:0.5.0"))
         }
@@ -159,16 +159,20 @@ processResources {
             modmenu_version: project.modmenu_version
     ]
 
-    exclude("**/.gitkeep")
     if (platform != "forge") exclude("data/forge")
     if (platform != "neoforge") exclude("data/neoforge")
-    if (stonecutter.eval(mc_version, ">=1.21")) {
+    if (stonecutter.eval(mc_version, "<1.21.4")) exclude("assets/corrosive_sculk/items/**")
+    if (stonecutter.eval(mc_version, ">=1.21")) { // HACK: If anyone has a better way to do this please tell me. I am having trouble with the copy command mainly.
         exclude("data/c/tags/items/**")
+        exclude("data/corrosive_sculk/loot_tables/**")
+        exclude("data/corrosive_sculk/recipes/**")
         exclude("data/corrosive_sculk/tags/blocks/**")
         exclude("data/corrosive_sculk/tags/entity_types/**")
         exclude("data/corrosive_sculk/tags/items/**")
     } else {
         exclude("data/c/tags/item/**")
+        exclude("data/corrosive_sculk/loot_table/**")
+        exclude("data/corrosive_sculk/recipe/**")
         exclude("data/corrosive_sculk/tags/block/**")
         exclude("data/corrosive_sculk/tags/entity_type/**")
         exclude("data/corrosive_sculk/tags/item/**")

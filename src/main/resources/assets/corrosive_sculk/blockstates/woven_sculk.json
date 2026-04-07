@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model":  "minecraft:block/sculk"
+      "model":  "corrosive_sculk:block/woven_sculk"
     }
   }
 }
