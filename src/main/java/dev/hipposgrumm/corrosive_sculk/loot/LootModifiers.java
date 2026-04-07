@@ -46,7 +46,7 @@ public class LootModifiers {
     private static class SculkToleranceLootItem extends LootPoolSingletonContainer {
         final Item item;
 
-        private SculkToleranceLootItem(Item item, int weight, int quality, List<LootItemCondition> lootItemConditions, List<LootItemFunction> lootItemFunctions/^? if >1.20.1 {^//^?} else {^//^LootItemCondition[] lootItemConditions, LootItemFunction[] lootItemFunctions^//^?}^/) {
+        private SculkToleranceLootItem(Item item, int weight, int quality, /^? if >1.20.1 {^/List<LootItemCondition> lootItemConditions, List<LootItemFunction> lootItemFunctions/^?} else {^//^LootItemCondition[] lootItemConditions, LootItemFunction[] lootItemFunctions^//^?}^/) {
             super(weight, quality, lootItemConditions, lootItemFunctions);
             this.item = item;
         }

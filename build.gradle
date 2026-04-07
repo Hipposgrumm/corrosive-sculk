@@ -36,7 +36,6 @@ loom {
 
     accessWidenerPath = file("../../src/main/resources/${project.modid}.accesswidener")
     if (platform == "forge") forge {
-        convertAccessWideners.set(true)
         mixinConfigs("${project.modid}.mixins.json")
     } else if (platform == "neoforge") neoForge {
         accessTransformer {
@@ -47,6 +46,12 @@ loom {
     runConfigs.all {
         ideConfigGenerated(true) // Run configurations are not created for subprojects by default
         runDir = "../../run" // Use a shared run folder and create separate worlds
+    }
+
+    if (platform != "neoforge") {
+        mixin {
+            defaultRefmapName = "${project.modid}.mixins.refmap.json"
+        }
     }
 }
 

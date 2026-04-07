@@ -51,18 +51,18 @@ import dev.hipposgrumm.corrosive_sculk.loot.LootModifierAddSculkToleranceItem;
     import net.neoforged.neoforge.attachment.AttachmentType;
     import net.neoforged.neoforge.common.NeoForge;
     import net.neoforged.neoforge.common.loot.IGlobalLootModifier;
-    //? if >=1.21.4 {
-    import net.neoforged.neoforge.event.AddServerReloadListenersEvent;
-    //?} else {
-    /^import net.neoforged.neoforge.event.AddReloadListenerEvent;
-    ^///?}
+        //? if >=1.21.4 {
+        import net.neoforged.neoforge.event.AddServerReloadListenersEvent;
+        //?} else {
+        /^import net.neoforged.neoforge.event.AddReloadListenerEvent;
+        ^///?}
     import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
     import net.neoforged.neoforge.event.brewing.RegisterBrewingRecipesEvent;
         //? if >=1.21 {
-        import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
-        //?} else {
-        /^import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
-        ^///?}
+        /^import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
+        ^///?} else {
+        import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
+        //?}
     import net.neoforged.neoforge.event.entity.living.LivingUseTotemEvent;
     import net.neoforged.neoforge.event.entity.player.PlayerEvent;
     import net.neoforged.neoforge.event.tick.LevelTickEvent;
@@ -87,7 +87,6 @@ import dev.hipposgrumm.corrosive_sculk.loot.LootModifierAddSculkToleranceItem;
     import net.minecraftforge.fml.loading.FMLEnvironment;
     import net.minecraftforge.registries.DeferredRegister;
     import net.minecraftforge.registries.ForgeRegistries;
-    import net.minecraftforge.registries.RegistryObject;
     //?}
 //?} else {
 /*import dev.hipposgrumm.corrosive_sculk.loot.LootModifiers;
@@ -124,8 +123,9 @@ public class CorrosiveSculk
     private static final DeferredRegister<Item> ITEMS = DeferredRegister.create(/*? if neoforge {*//*BuiltInRegistries.ITEM*//*?} else {*/ForgeRegistries.ITEMS/*?}*/, MODID);
     private static final DeferredRegister<MobEffect> POTION_EFFECTS = DeferredRegister.create(/*? if neoforge {*//*BuiltInRegistries.MOB_EFFECT*//*?} else {*/ForgeRegistries.MOB_EFFECTS/*?}*/, MODID);
     private static final DeferredRegister<Potion> POTIONS = DeferredRegister.create(/*? if neoforge {*//*BuiltInRegistries.POTION*//*?} else {*/ForgeRegistries.POTIONS/*?}*/, MODID);
-    //? if <1.21
+    //? if <1.21 {
     private static final DeferredRegister<Enchantment> ENCHANTMENTS = DeferredRegister.create(/*? if neoforge {*//*BuiltInRegistries.ENCHANTMENT*//*?} else {*/ForgeRegistries.ENCHANTMENTS/*?}*/, MODID);
+    //?}
     private static final DeferredRegister<SoundEvent> SOUND_EVENTS = DeferredRegister.create(/*? if neoforge {*//*BuiltInRegistries.SOUND_EVENT*//*?} else {*/ForgeRegistries.SOUND_EVENTS/*?}*/, MODID);
     private static final DeferredRegister</*? if neoforge {*//*MapCodec*//*?} else {*/Codec/*?}*/<? extends IGlobalLootModifier>> LOOT_MODIFIERS = DeferredRegister.create(/*? if neoforge {*//*NeoForgeRegistries.GLOBAL_LOOT_MODIFIER_SERIALIZERS*//*?} else {*/ForgeRegistries.Keys.GLOBAL_LOOT_MODIFIER_SERIALIZERS/*?}*/, MODID);
     //? if neoforge

@@ -25,7 +25,6 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 *///?}
 
 public class NetworkHelper {
-
     //? if forgebase && <1.20.5 {
     private static SimpleChannel NETWORK_INSTANCE;
     private static int packetID = 0;
