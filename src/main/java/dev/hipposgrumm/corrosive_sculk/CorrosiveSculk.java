@@ -261,6 +261,9 @@ public class CorrosiveSculk
         ServerTickEvents.END_WORLD_TICK.register(CorrosiveSculk::tickAllEntities);
         EntityTrackingEvents.START_TRACKING.register(CorrosiveSculk::startTrackingEntity);
         EntityTrackingEvents.STOP_TRACKING.register(CorrosiveSculk::stopTrackingEntity);
+
+        //? if >=1.20.5
+        NetworkHelper.init();
         *///?}
     }
 

@@ -20,6 +20,9 @@ import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.simple.SimpleChannel;
 //?} else {
 /*import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+    //? if >=1.20.5 {
+    import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
+    //?}
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 *///?}
@@ -75,7 +78,12 @@ public class NetworkHelper {
                 }).add();
         //?}
     }
-    //?}
+    //?} elif >=1.20.5 {
+    /*public static void init() {
+        PayloadTypeRegistry.playS2C().register(SculkDamageSyncPacket.TYPE, SculkDamageSyncPacket.CODEC);
+        PayloadTypeRegistry.playS2C().register(SculkDamageSoundPacket.TYPE, SculkDamageSoundPacket.CODEC);
+    }
+    *///?}
 
     @SuppressWarnings("SuspiciousIndentAfterControlStatement")
     public static void send(ServerPlayer player, CorrosiveSculkPacket packet) {

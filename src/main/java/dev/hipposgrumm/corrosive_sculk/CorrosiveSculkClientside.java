@@ -33,9 +33,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-    //? if >=1.20.5 {
-    import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
-    //?}
 *///?}
 
 import java.util.function.Consumer;
@@ -66,10 +63,6 @@ public class CorrosiveSculkClientside
             /^BlockRenderLayerMap.putBlock(CorrosiveSculk.WOVEN_SCULK_VEIN.get(), RenderType.CUTOUT);
             ^///?} else {
             BlockRenderLayerMap.INSTANCE.putBlock(CorrosiveSculk.WOVEN_SCULK_VEIN.get(), RenderType.cutout());
-            //?}
-            //? if >=1.20.5 {
-            PayloadTypeRegistry.playS2C().register(SculkDamageSyncPacket.TYPE, SculkDamageSyncPacket.CODEC);
-            PayloadTypeRegistry.playS2C().register(SculkDamageSoundPacket.TYPE, SculkDamageSoundPacket.CODEC);
             //?}
         ClientPlayNetworking.registerGlobalReceiver(SculkDamageSyncPacket./^? if >=1.20.5 {^/TYPE/^?} else {^//^ID^//^?}^/,
             //? if >=1.20.5 {
