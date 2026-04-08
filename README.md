@@ -1,2 +1,11 @@
-## Corrosive Sculk (dev branch)
-This branch is up to date with my latest changes. They do not reflect the mod in its current state and may be full of bugs.
+<img src="images/depths_comparison.png?raw=true" width=300><br><br>
+This mod gives Sculk a corruptive property that will temporarily drain your health.<br>
+If you have played any of the new Zelda games, you may notice that this is inspired by Gloom from Tears of the Kingdom:<br>
+<img src="images/comparison.gif?raw=true" alt="Comparing the player getting damaged in Minecraft and TotK. The minecraft avatar is Hipposgrumm, the mod developer. If you see this mod uploaded anywhere that doesn't link back to/download directly from CurseForge, Modrinth, or PlanetMinecraft, please report it."><br>
+You will take sculk damage if making contact with sculk or if you are attacked by any sculk-themed mobs (e.g. the Warden). The only way to heal from the Corrosive Sculk effect is to bathe in natural skylight; and don't try using Absorption hearts, it won't help much.<br><br>
+For more prolonged periods of time in the deep dark, it may be in your best interests to create a Potion of Sculk Resistance. Sculk Resistance is brewed like any other potion by using a Sculk Catalyst in an Awkward Potion, and grants temporary hearts that can tank sculk damage which regenerate without the need for sunlight.<br>
+<img src="images/sculk_resist_recipe.png?raw=true" alt="Sculk Catalyst in Brewing Stand with Awkward Potions at the bottom." width=500><br>
+Sculk Resistance has 3 tiers, each of which adds one resist heart per level, and can be obtained by adding glowstone.<br><br>
+If you're a builder who wants to use Sculk in your palette, you can craft it together with wool to create Woven Sculk: a variant of Sculk and Sculk Veins that appear identical to their normal counterparts, but will not damage you, making them a perfect building block for your next Warden Petting Zoo.
+<img src="images/woven_sculk_recipe.png?raw=true" alt="2 Sculk Blocks crossed with 2 Wool" width=500><br>
+<img src="images/woven_sculk_vein_recipe.png?raw=true" alt="2 Sculk Veins crossed with 2 Wool Carpets to produce 5 Woven Sculk Veins; the most egregious recipe I could think of because I couldn't make it work nicely." width=500>
