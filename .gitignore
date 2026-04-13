@@ -5,3 +5,4 @@
 /versions/*/run/
 /build/
 /run/
+.env

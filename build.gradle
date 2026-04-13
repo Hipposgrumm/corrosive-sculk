@@ -2,6 +2,9 @@ plugins {
     id 'maven-publish'
     id "dev.architectury.loom"
     id "dev.kikugie.j52j" version "1.0.2"
+
+    id 'net.darkhax.curseforgegradle' version '1.1.+'
+    id "com.modrinth.minotaur" version "2.+"
 }
 
 def platform = project.property("loom.platform")
@@ -251,5 +254,74 @@ publishing {
         // Notice: This block does NOT have the same function as the block in the top level.
         // The repositories here will be used for publishing your artifact, not for
         // retrieving dependencies.
+    }
+}
+
+def versions = project.versions.split(' ')
+if (versions[0] == "[VERSIONED]") throw new IllegalStateException("No versions defined for "+mc_version);
+def favoriteVersion = versions[0]
+def _changelog = new StringBuilder()
+for (String line:rootProject.file("changelog.md").readLines()) {
+    _changelog.append(line)
+    _changelog.append('\n')
+}
+_changelog = _changelog.toString()
+def upperPlat = platform
+switch (platform) {
+    case "fabric":
+        upperPlat = "Fabric"
+        break
+    case "forge":
+        upperPlat = "Forge"
+        break
+    case "neoforge":
+        upperPlat = "NeoForge"
+        break
+}
+tasks.register('publishCurseForge', net.darkhax.curseforgegradle.TaskPublishCurseForge) {
+    disableVersionDetection()
+
+    apiToken = env.CURSEFORGE_TOKEN.value
+
+    def mainFile = upload(project.curseID, remapJar)
+    mainFile.releaseType = "release"
+    mainFile.changelog = _changelog
+    mainFile.changelogType = "markdown"
+    mainFile.addOptional("cloth-config")
+    if (platform == "fabric") {
+        mainFile.addRequirement("fabric-api")
+        mainFile.addOptional("modmenu")
+    }
+    mainFile.addModLoader(upperPlat)
+    mainFile.addEnvironment("Client", "Server")
+    mainFile.addJavaVersion("Java "+targetJavaVersion)
+    for (String ver : versions) mainFile.addGameVersion(ver)
+
+    def sourcesFile = mainFile.withAdditionalFile(sourcesJar)
+    sourcesFile.changelog = "This is the sources jar. It contains the source code for convenience."
+    mainFile.changelogType = "markdown"
+}
+modrinth {
+    token = env.MODRINTH_TOKEN.value
+    projectId = project.slug
+    versionNumber = version+'+'+favoriteVersion
+    versionName = 'v'+version+String.format(" (%s %s)", upperPlat, favoriteVersion)
+    changelog = _changelog
+    versionType = "release"
+    uploadFile = remapJar
+    additionalFiles {
+        sourcesJar sourcesJar
+    }
+    gameVersions = []
+    gameVersions.addAll(versions)
+    loaders = [platform]
+    detectLoaders = false
+    autoAddDependsOn = false
+    dependencies {
+        optional.project "cloth-config"
+        if (platform == "fabric") {
+            required.project "fabric-api"
+            optional.project "modmenu"
+        }
     }
 }

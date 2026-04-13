@@ -1,4 +1,5 @@
 plugins {
+    id("co.uzzu.dotenv.gradle") version "4.0.0"
     id("dev.kikugie.stonecutter")
     id("dev.architectury.loom") version "1.10-SNAPSHOT" apply false
 }
@@ -11,4 +12,11 @@ stonecutter.registerChiseled tasks.register("chiseledBuild", stonecutter.chisele
     doLast {
         project.delete(files("$rootDir/build/libs"))
     }
+}
+
+stonecutter.registerChiseled tasks.register("chiseledBuildAndPublish", stonecutter.chiseled) {
+    setGroup "project"
+    dependsOn("chiseledBuild")
+    ofTask("publishCurseForge")
+    ofTask("modrinth")
 }
