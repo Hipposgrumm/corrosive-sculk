@@ -102,9 +102,8 @@ public class Config {
         
         
         ["Assist Mode"]
-        # Options that may make the mod easier or not as punishing.
-        
-        """;
+        #\s"""+get.apply("gui.corrosive_sculk.config.category.assist_mode.desc");
+        contents += "\n\n";
         contents += writeOption(OPTION_NAMES[1], vals[1], get.apply("gui.corrosive_sculk.config.option.healing_circumstance.desc")
                 +"\nNORMAL - "+get.apply("gui.corrosive_sculk.config.option.healing_circumstance.desc.0")
                 +"\nRESIST - "+get.apply("gui.corrosive_sculk.config.option.healing_circumstance.desc.1")

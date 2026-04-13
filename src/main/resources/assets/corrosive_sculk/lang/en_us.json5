@@ -19,6 +19,7 @@
   "gui.corrosive_sculk.config.option.sculk_warn_sound": "Sculk Warning Sound",
   "gui.corrosive_sculk.config.option.sculk_warn_sound.desc": "Whether you hear a warning sound when stepping on sculk. Turn it off if it's too obnoxious.",
   "gui.corrosive_sculk.config.category.assist_mode": "Assist Mode",
+  "gui.corrosive_sculk.config.category.assist_mode.desc": "Options that may make the mod easier or not as punishing.",
   "gui.corrosive_sculk.config.option.sculk_resist_invul": "Sculk Resistance Grants Immunity",
   "gui.corrosive_sculk.config.option.sculk_resist_invul.desc": "Sculk Resistance grants total immunity to sculk.\nIf this is enabled when the game starts, it disables the recipes for the stronger variants of sculk resistance to avoid accidentally crafting them (since they're useless). This requires a game restart when changed to be reflected in-game.",
   "gui.corrosive_sculk.config.option.healing_circumstance": "Sculk Healing Circumstance",

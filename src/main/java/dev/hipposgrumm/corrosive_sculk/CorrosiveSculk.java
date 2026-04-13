@@ -460,6 +460,7 @@ public class CorrosiveSculk
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
         //? if fabric
         /*ServerPlayer player = handler.getPlayer();*/
+
         SculkDamageCapability sculkDamage =
                 //? if neoforge {
                 /*player.getData(SCULK_DAMAGE_ATTACHMENT);
@@ -468,6 +469,8 @@ public class CorrosiveSculk
                 //?} else {
                 /*((PersistentDataAccessor) player).corrosive_sculk$getSculkData();
                 *///?}
+        if (sculkDamage == null) return;
+
         NetworkHelper.send(player, SculkDamageSyncPacket.update(player, sculkDamage));
     }
 
@@ -496,6 +499,7 @@ public class CorrosiveSculk
         Entity target = event.getTarget();
         //?}
         if (!(target instanceof LivingEntity)) return;
+
         SculkDamageCapability sculkDamage =
                 //? if neoforge {
                 /*target.getData(SCULK_DAMAGE_ATTACHMENT);
@@ -504,6 +508,8 @@ public class CorrosiveSculk
                 //?} else {
                 /*((PersistentDataAccessor) target).corrosive_sculk$getSculkData();
                 *///?}
+        if (sculkDamage == null) return;
+
         NetworkHelper.send(player, SculkDamageSyncPacket.update(target, sculkDamage));
     }
 
@@ -541,6 +547,7 @@ public class CorrosiveSculk
         *///?}
         for (Entity e:level.getAllEntities()) {
             if (!(e instanceof LivingEntity entity)) continue;
+
             SculkDamageCapability sculkDamage =
                     //? if neoforge {
                     /*entity.getData(SCULK_DAMAGE_ATTACHMENT);
@@ -549,6 +556,8 @@ public class CorrosiveSculk
                     //?} else {
                     /*((PersistentDataAccessor) entity).corrosive_sculk$getSculkData();
                     *///?}
+            if (sculkDamage == null) continue;
+
             boolean updateFull = false, updateWarn = false;
             boolean hasContact, cantBeSafe;
             if (SculkDamaging.canSculkDamage(entity)) {
@@ -593,6 +602,16 @@ public class CorrosiveSculk
         if (!Config.sculkHealCircumstance.hasSculkDamage) return;
         Entity attacker = source.getDirectEntity();
         if (attacker!=null && SculkDamaging.canSculkDamage(entity)) {
+            SculkDamageCapability sculkDamage =
+                    //? if neoforge {
+                    /*entity.getData(SCULK_DAMAGE_ATTACHMENT);
+                    *///?} elif forge {
+                    entity.getCapability(SculkDamageCapability.Provider.SCULK_DAMAGE).orElse(null);
+                    //?} else {
+                    /*((PersistentDataAccessor) entity).corrosive_sculk$getSculkData();
+                    *///?}
+            if (sculkDamage == null) return;
+
             int sculk = Math.min((int) damage,2*SCULK_DAMAGING_ENTITIES.getEntitySculkDamage(attacker));
             if (sculk<=0) return;
             int div = 4;
@@ -619,14 +638,6 @@ public class CorrosiveSculk
             if (prot > 0) sculk -= Math.round(prot / div);
             if (sculk<=0) return;
             int actualSculkDamage = sculk;
-            SculkDamageCapability sculkDamage =
-                    //? if neoforge {
-                    /*entity.getData(SCULK_DAMAGE_ATTACHMENT);
-                    *///?} elif forge {
-                    entity.getCapability(SculkDamageCapability.Provider.SCULK_DAMAGE).orElse(null);
-                    //?} else {
-                    /*((PersistentDataAccessor) entity).corrosive_sculk$getSculkData();
-                    *///?}
             SculkDamaging.doSculkDamage(actualSculkDamage/2, sculkDamage, entity, attacker);
             SculkDamaging.sendUpdate(sculkDamage, entity);
         }
@@ -649,6 +660,8 @@ public class CorrosiveSculk
                 //?} else {
                 /*((PersistentDataAccessor) entity).corrosive_sculk$getSculkData();
                 *///?}
+        if (sculkDamage == null) return;
+
         float remaining = entity.getMaxHealth() - (sculkDamage.getDamage()*2);
         sculkDamage.decreaseDamage(1);
         sculkDamage.setForcedHealing(4-(int)remaining);

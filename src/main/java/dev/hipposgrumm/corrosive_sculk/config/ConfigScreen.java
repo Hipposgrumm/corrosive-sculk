@@ -5,6 +5,7 @@ import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FormattedText;
 
 import java.io.IOException;
 
@@ -61,7 +62,7 @@ public class ConfigScreen {
                                 Config.sculkResistInvul = val;
                                 save();
                             }).build()
-                    );
+                    ).setDescription(new FormattedText[] {Component.translatable("gui.corrosive_sculk.config.category.assist_mode.desc")});
         } else {
             builder.alwaysShowTabs().getOrCreateCategory(Component.translatable("gui.corrosive_sculk.config.absent"));
         }

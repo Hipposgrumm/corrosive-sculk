@@ -25,6 +25,7 @@ public class MixinPlayer {
     private float corrosive_sculk$limitHurtHealth(Player instance, Operation<Float> original) {
         if (!Config.sculkHealCircumstance.hasSculkDamage) return original.call(instance);
         AtomicInteger sculkHealth = new AtomicInteger();
+
         SculkDamageCapability damageCapability =
                 //? if neoforge {
                 /*instance.getData(CorrosiveSculk.SCULK_DAMAGE_ATTACHMENT);
@@ -33,6 +34,8 @@ public class MixinPlayer {
                 //?} else {
                 /*((PersistentDataAccessor) instance).corrosive_sculk$getSculkData();
                 *///?}
+        if (damageCapability == null) return original.call(instance);
+
         sculkHealth.set(damageCapability.getDamage()*2);
         //noinspection MixinExtrasOperationParameters      // on fabric it sees the cast above and panics, specifically when the cast above is for `instance`
         return original.call(instance) - sculkHealth.get();
